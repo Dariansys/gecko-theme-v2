@@ -1,0 +1,22 @@
+{
+  "name": "gecko-theme-v2",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Native Shopify storefront foundation for Gecko EDC",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "shopify theme dev --store yh5bqf-un.myshopify.com",
+    "dev:create": "shopify theme push --store yh5bqf-un.myshopify.com --unpublished --theme \"Gecko EDC V2 Development\" --strict",
+    "themes": "shopify theme list --store yh5bqf-un.myshopify.com",
+    "preview": "shopify theme open --store yh5bqf-un.myshopify.com",
+    "editor": "shopify theme open --store yh5bqf-un.myshopify.com --editor",
+    "check": "shopify theme check --fail-level error",
+    "check:json": "shopify theme check --output json --fail-level error"
+  },
+  "devDependencies": {
+    "@shopify/cli": "4.8.5"
+  }
+}

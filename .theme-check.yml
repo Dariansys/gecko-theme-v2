@@ -1,0 +1,2 @@
+# Shopify recommended stable-theme checks; no suppressed diagnostics.
+extends: theme-check:recommended

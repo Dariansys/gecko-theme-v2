@@ -1,0 +1,18 @@
+# Development-only files; only native theme folders belong in Shopify.
+AGENTS.md
+README.md
+docs/*
+package.json
+package-lock.json
+.github/*
+.gitignore
+.gitattributes
+.theme-check.yml
+node_modules/*
+.env*
+*.log
+*.zip
+*.bundle
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+LICENSE.md
