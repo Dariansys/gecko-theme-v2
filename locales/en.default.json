@@ -1,4 +1,15 @@
 {
+  "header": {
+    "navigation": "Main navigation",
+    "search": "Search",
+    "account": "Account",
+    "bag": "Bag",
+    "view_all": "View {{ title }}",
+    "cart_count": {
+      "one": "{{ count }} item in bag",
+      "other": "{{ count }} items in bag"
+    }
+  },
   "brand": {
     "home": "{{ name }} home"
   },

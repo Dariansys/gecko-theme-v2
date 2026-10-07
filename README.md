@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 03A brand lockup foundation
+- Status: Under Development — Phase 03B desktop header
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -83,6 +83,15 @@ uploads, with responsive size caps and a shop-name/text fallback. Only the brand
 area is implemented; no full header, navigation or mobile-menu design is added.
 Upload/replacement verification runs in the local unpublished Shopify preview.
 Stop after Phase 03A until further work is explicitly authorized.
+
+## Phase 03B desktop header
+
+[docs/header.md](docs/header.md) covers the sticky header, merchant-selected
+desktop navigation and direct Shopify Search/Account/Bag links. Configure the
+Main menu and action/sticky toggles in Header settings. Desktop navigation appears
+from 1024px; smaller screens keep the brand and Bag without a mobile menu.
+Review real storefront routes and Theme Editor behavior locally. Stop after
+Phase 03B until the next scope is explicitly authorized.
 
 ## Folder structure
 

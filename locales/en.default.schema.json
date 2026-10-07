@@ -35,6 +35,11 @@
     "typography": "Typography"
   },
   "labels": {
+    "main_menu": "Main menu",
+    "sticky_header": "Sticky header",
+    "show_account": "Show account",
+    "show_search": "Show search",
+    "show_cart_count": "Show cart count",
     "brand_mark": "Brand mark image",
     "brand_mark_width": "Brand mark maximum width",
     "wordmark": "Wordmark image",

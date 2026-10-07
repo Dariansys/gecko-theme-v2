@@ -54,8 +54,8 @@ These rules apply to every file in this project.
 
 ## Scope and store protection
 
-Phase 03A is brand-asset architecture and the editable dual-logo header lockup only. See docs/brand-assets.md and docs/design-system.md. Stop before further header work until explicitly instructed.
-Keep inherited Skeleton demonstration components unchanged except for the authorized Header brand lockup/settings. Do not create a full header, navigation, mobile menu, footer, homepage, hero, collection page, product page, cart, search or functional Shopify product cards in this phase.
+Phase 03B is global header layout and desktop navigation only. See docs/header.md, docs/brand-assets.md and docs/design-system.md. Stop before subsequent work until explicitly instructed.
+Keep inherited Skeleton demonstration components unchanged outside the authorized header. Do not create a mobile menu, mega menu, footer, homepage, hero, collection page, product page, cart drawer, search overlay or functional Shopify product cards in this phase.
 Use Codex Cloud for coding and static validation, GitHub for source control, and local Shopify CLI for preview and theme synchronization. Do not attempt Shopify authentication, theme pushes or publication from Codex Cloud. Commit and push work to dev/gecko-v2.
 Do not migrate old Gecko code, assets, layouts, CSS, or JavaScript.
 Never delete or modify products, variants, collections, inventory, customers, orders, payments, shipping settings, or domain settings as part of theme development.

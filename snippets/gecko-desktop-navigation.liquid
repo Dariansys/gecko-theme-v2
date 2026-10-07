@@ -1,0 +1,51 @@
+{% comment %}
+  Native disclosures keep dropdowns operable without JavaScript. Parent URLs
+  remain reachable inside the dropdown; Shopify's three menu levels are retained.
+{% endcomment %}
+<ul class="gecko-header__menu" role="list">
+  {% for link in menu.links %}
+    <li class="gecko-header__menu-item">
+      {% if link.links != blank %}
+        <details class="gecko-header__disclosure" name="gecko-navigation-{{ section_id }}">
+          <summary class="gecko-header__nav-label{% if link.active or link.child_active %} is-active{% endif %}">
+            <span>{{ link.title | escape }}</span>
+            <span class="gecko-header__chevron" aria-hidden="true"></span>
+          </summary>
+          <ul class="gecko-header__dropdown" role="list">
+            <li>
+              <a class="gecko-header__dropdown-link" href="{{ link.url | escape }}"{% if link.current %} aria-current="page"{% endif %}>
+                {{ 'header.view_all' | t: title: link.title | escape }}
+              </a>
+            </li>
+            {% for child_link in link.links %}
+              <li>
+                <a class="gecko-header__dropdown-link" href="{{ child_link.url | escape }}"{% if child_link.current %} aria-current="page"{% endif %}>
+                  {{ child_link.title | escape }}
+                </a>
+                {% if child_link.links != blank %}
+                  <ul class="gecko-header__grandchildren" role="list">
+                    {% for grandchild_link in child_link.links %}
+                      <li>
+                        <a class="gecko-header__dropdown-link" href="{{ grandchild_link.url | escape }}"{% if grandchild_link.current %} aria-current="page"{% endif %}>
+                          {{ grandchild_link.title | escape }}
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </details>
+      {% else %}
+        <a
+          class="gecko-header__nav-label{% if link.active %} is-active{% endif %}"
+          href="{{ link.url | escape }}"
+          {% if link.current %}aria-current="page"{% endif %}
+        >
+          {{ link.title | escape }}
+        </a>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>

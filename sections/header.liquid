@@ -1,63 +1,42 @@
-<header>
-  {% render 'gecko-brand-lockup', brand_settings: section.settings %}
+{{ 'gecko-header.css' | asset_url | stylesheet_tag }}
+<header class="gecko-header surface-light" data-sticky="{{ section.settings.sticky_header }}">
+  <div class="gecko-header__inner gecko-container gecko-container--wide">
+    <div class="gecko-header__brand">
+      {% render 'gecko-brand-lockup', brand_settings: section.settings %}
+    </div>
 
-  <div class="header__menu">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
-
-  <div class="header__icons">
-    {% if shop.customer_accounts_enabled %}
-      <shopify-account menu="{{ section.settings.customer_account_menu }}">
-        {{ 'icon-account.svg' | inline_asset_content }}
-      </shopify-account>
+    {% if section.settings.menu.links != blank %}
+      <nav class="gecko-header__nav" aria-label="{{ 'header.navigation' | t | escape }}">
+        {% render 'gecko-desktop-navigation', menu: section.settings.menu, section_id: section.id %}
+      </nav>
     {% endif %}
 
-    <a href="{{ routes.cart_url }}">
-      {% if cart.item_count > 0 %}
-        <sup>{{ cart.item_count }}</sup>
+    <div class="gecko-header__actions">
+      {% if section.settings.show_search %}
+        <a class="gecko-header__action gecko-header__action--search" href="{{ routes.search_url }}">
+          {{ 'header.search' | t }}
+        </a>
       {% endif %}
-
-      {{ 'icon-cart.svg' | inline_asset_content }}
-    </a>
+      {% if section.settings.show_account and shop.customer_accounts_enabled %}
+        <a class="gecko-header__action gecko-header__action--account" href="{{ routes.account_url }}">
+          {{ 'header.account' | t }}
+        </a>
+      {% endif %}
+      <a class="gecko-header__action gecko-header__action--bag" href="{{ routes.cart_url }}">
+        <span>{{ 'header.bag' | t }}</span>
+        {% if section.settings.show_cart_count %}
+          <span aria-hidden="true">({{ cart.item_count }})</span>
+          <span class="gecko-visually-hidden">{{ 'header.cart_count' | t: count: cart.item_count }}</span>
+        {% endif %}
+      </a>
+    </div>
   </div>
 </header>
-
-{% stylesheet %}
-  header {
-    height: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  header a {
-    position: relative;
-    text-decoration: none;
-    color: var(--color-foreground);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  header a sup {
-    position: absolute;
-    left: 100%;
-    overflow: hidden;
-    max-width: var(--page-margin);
-  }
-  header svg {
-    width: 2rem;
-  }
-  header .header__menu,
-  header .header__icons {
-    display: flex;
-    gap: 1rem;
-  }
-{% endstylesheet %}
 
 {% schema %}
 {
   "name": "t:general.header",
+  "class": "gecko-header-section",
   "settings": [
     {
       "type": "header",
@@ -112,13 +91,32 @@
     {
       "type": "link_list",
       "id": "menu",
-      "label": "t:labels.menu"
+      "label": "t:labels.main_menu",
+      "default": "main-menu"
     },
     {
-      "type": "link_list",
-      "id": "customer_account_menu",
-      "label": "t:labels.customer_account_menu",
-      "default": "customer-account-main-menu"
+      "type": "checkbox",
+      "id": "sticky_header",
+      "label": "t:labels.sticky_header",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "t:labels.show_account",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "t:labels.show_search",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_count",
+      "label": "t:labels.show_cart_count",
+      "default": true
     }
   ]
 }
