@@ -13,10 +13,22 @@
   "sections": {
     "header": {
       "type": "header",
-      "settings": {}
+      "settings": {
+        "brand_mark": "shopify://shop_images/logo.jpg",
+        "brand_mark_width": 60,
+        "wordmark": "shopify://shop_images/wordmark.png",
+        "wordmark_width": 200,
+        "brand_gap": 4,
+        "brand_fallback_text": "",
+        "menu": "main-menu",
+        "sticky_header": true,
+        "show_account": true,
+        "show_search": true,
+        "show_cart_count": true
+      }
     }
   },
   "order": [
     "header"
-  ],
+  ]
 }
