@@ -7,8 +7,8 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 01 infrastructure
-- Shopify store: yh5bqf-un.myshopify.com (identified from public Shopify storefront metadata; authenticated access still pending)
+- Status: Under Development — Phase 02 design system
+- Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
 
@@ -22,6 +22,10 @@ npm run check
 ```
 
 ## Connect and start development
+
+Shopify authentication, preview and theme synchronization are handled locally on
+the developer's computer. Do not run Shopify authentication or theme pushes from
+Codex Cloud; Cloud is for coding, Theme Check and GitHub source control.
 
 Log in with the Shopify account that has theme access to this store. The CLI prompts for authentication; never put credentials or tokens in Git.
 
@@ -52,7 +56,7 @@ npm run preview -- --theme NEW_THEME_ID
 npm run editor -- --theme NEW_THEME_ID
 ```
 
-Verify homepage and existing product/collection/cart routes on mobile and desktop, CSS requests, inherited section JavaScript, browser console errors, and Theme Editor settings. Theme Check is static analysis and does not prove server-side rendering or runtime functionality. Live preview verification is pending authentication; no theme ID is assigned yet.
+Verify existing routes on mobile and desktop, CSS requests, inherited section JavaScript, browser console errors, and Theme Editor settings locally. Theme Check is static analysis and does not prove server-side rendering or runtime functionality. Keep the local development theme ID in ignored local state, not in this document.
 
 ## Theme Check
 
@@ -62,6 +66,14 @@ npm run check:json
 ```
 
 `.theme-check.yml` extends Shopify's recommended configuration without disabled checks. Fix Liquid errors before continuing; document inherited warnings in `docs/phase-01-report.md`.
+
+## Phase 02 design foundation
+
+The Gecko CSS foundation is documented in [docs/design-system.md](docs/design-system.md).
+It supplies tokens, light/dark surfaces, fluid typography, containers and opt-in
+visual primitives. The inherited storefront sections are still scaffolding.
+No homepage, header, footer, catalog page, cart or search has been built.
+Stop after Phase 02; later phases require explicit instructions.
 
 ## Folder structure
 

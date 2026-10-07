@@ -1,0 +1,4 @@
+{% comment %} Load after critical.css: tokens, global foundation, then opt-in primitives. {% endcomment %}
+{{ 'gecko-tokens.css' | asset_url | stylesheet_tag }}
+{{ 'gecko-base.css' | asset_url | stylesheet_tag }}
+{{ 'gecko-components.css' | asset_url | stylesheet_tag }}

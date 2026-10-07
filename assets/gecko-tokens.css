@@ -1,0 +1,107 @@
+/* Gecko EDC: neutral studio surfaces with one circular warm/cool brand accent. */
+:root {
+  --gecko-black: #141414;
+  --gecko-graphite: #292929;
+  --gecko-white: #f7f7f5;
+  --gecko-off-white: #f1f1ef;
+  --gecko-light-gray: #e9e9e7;
+  --gecko-border: #d8d8d5;
+  --gecko-silver: #b9b9b4;
+  --gecko-muted: #61615c;
+  --gecko-orange: #e3552d;
+  --gecko-red: #df2121;
+  --gecko-crimson: #bc2e3f;
+  --gecko-wine: #9b5262;
+  --gecko-cyan: #4ccdc2;
+  --gecko-teal: #6caba0;
+  --gecko-warm-neutral: #b18865;
+
+  /* Shared field: circular warmth, a wine transition and cool light at the edge. */
+  --gradient-gecko:
+    radial-gradient(ellipse at 18% 24%, var(--gecko-orange) 0%, transparent 55%),
+    radial-gradient(ellipse at 28% 80%, var(--gecko-red) 0%, var(--gecko-crimson) 24%, transparent 64%),
+    radial-gradient(ellipse at 88% 38%, var(--gecko-cyan) 0%, var(--gecko-teal) 28%, transparent 66%),
+    linear-gradient(135deg, var(--gecko-warm-neutral), var(--gecko-wine));
+  /* Solid veils adapt the same field; they are not unrelated gradient recipes. */
+  --gradient-gecko-soft: linear-gradient(#f7f7f5ed, #f7f7f5ed), var(--gradient-gecko);
+  --gradient-gecko-glow: linear-gradient(#141414e8, #141414e8), var(--gradient-gecko);
+
+  --surface-background: var(--gecko-white);
+  --surface-foreground: var(--gecko-black);
+  --surface-muted: var(--gecko-muted);
+  --surface-border: var(--gecko-border);
+  --surface-control: #fff;
+  --surface-glow: var(--gradient-gecko-soft);
+  --button-primary-background: var(--gecko-black);
+  --button-primary-foreground: var(--gecko-white);
+  --border-subtle: 1px solid var(--surface-border);
+  --shadow-subtle: 0 2px 10px #14141408;
+
+  /* Keep the merchant-selected Shopify font. No new font downloads. */
+  --font-gecko: var(--font-primary--family, system-ui, sans-serif);
+  --font-technical: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  --type-display-xl: clamp(3rem, 1.75rem + 5vw, 6.5rem);
+  --type-display-l: clamp(2.5rem, 1.6rem + 3.6vw, 5rem);
+  --type-h1: clamp(2rem, 1.4rem + 2.4vw, 3.5rem);
+  --type-h2: clamp(1.625rem, 1.2rem + 1.7vw, 2.75rem);
+  --type-h3: clamp(1.25rem, 1.05rem + 0.8vw, 1.75rem);
+  --type-body-large: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  --type-body: 1rem;
+  --type-body-small: 0.875rem;
+  --type-caption: 0.8125rem;
+  --type-technical: 0.75rem;
+  --leading-display: 1.05;
+  --leading-heading: 1.15;
+  --leading-body: 1.6;
+  --tracking-heading: -0.025em;
+  --tracking-technical: 0.08em;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --gutter: clamp(1rem, 0.5rem + 2vw, 3rem);
+  --section-space: clamp(3rem, 1.5rem + 6vw, 7.5rem);
+  --component-gap: clamp(1rem, 0.5rem + 2vw, 2rem);
+
+  --container-narrow: 44rem;
+  --container-content: 72rem;
+  --container-wide: 100rem;
+  --container-full: 100%;
+  --radius-small: 0.25rem;
+  --radius-medium: 0.625rem;
+  --radius-large: 1rem;
+  --radius-circle: 50%;
+
+  --motion-fast: 140ms;
+  --motion-standard: 240ms;
+  --motion-slow: 480ms;
+  --ease-gecko: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-reveal-distance: 12px;
+  --motion-image-scale: 1.02;
+  --motion-arrow-distance: 3px;
+  --z-base: 0;
+  --z-accent: 1;
+  --z-sticky: 10;
+  --z-overlay: 20;
+  --z-dialog: 30;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0s;
+    --motion-standard: 0s;
+    --motion-slow: 0s;
+    --motion-reveal-distance: 0px;
+    --motion-image-scale: 1;
+    --motion-arrow-distance: 0px;
+  }
+}

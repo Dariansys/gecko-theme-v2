@@ -54,8 +54,9 @@ These rules apply to every file in this project.
 
 ## Scope and store protection
 
-Phase 01 is infrastructure only. Stop before Phase 02 until explicitly instructed.
-Keep the inherited Skeleton demonstration templates and components unchanged unless fixing a critical error. Do not create final header, footer, homepage, hero, collection page, product page, cart drawer, product cards, animations, or Gecko visual styling in this phase.
+Phase 02 is the design system only: tokens, base CSS, opt-in visual primitives and stylesheet integration. See docs/design-system.md. Stop before Phase 03 until explicitly instructed.
+Keep the inherited Skeleton demonstration components unchanged unless fixing a critical error. Do not create final header, footer, homepage, hero, collection page, product page, cart, search or functional Shopify product cards in this phase.
+Use Codex Cloud for coding and static validation, GitHub for source control, and local Shopify CLI for preview and theme synchronization. Do not attempt Shopify authentication, theme pushes or publication from Codex Cloud. Commit and push work to dev/gecko-v2.
 Do not migrate old Gecko code, assets, layouts, CSS, or JavaScript.
 Never delete or modify products, variants, collections, inventory, customers, orders, payments, shipping settings, or domain settings as part of theme development.
 Use a newly created unpublished development theme; never publish, overwrite, or develop against the live theme without an explicit instruction.

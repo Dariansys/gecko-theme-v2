@@ -1,0 +1,194 @@
+/* Opt-in primitives only: no storefront components or product Liquid in Phase 02. */
+.gecko-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid transparent;
+  border-radius: var(--radius-small);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  cursor: pointer;
+  transition: background-color var(--motion-fast) var(--ease-gecko), color var(--motion-fast) var(--ease-gecko);
+}
+.gecko-button--primary {
+  /* Surface tokens invert the neutral primary only within dark photography. */
+  color: var(--button-primary-foreground);
+  background: var(--button-primary-background);
+}
+.gecko-button--secondary {
+  color: var(--surface-foreground);
+  background: transparent;
+  border-color: var(--surface-foreground);
+}
+.gecko-button--text {
+  color: var(--surface-foreground);
+  background: transparent;
+  padding-inline: 0;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+.gecko-button--icon {
+  color: var(--surface-foreground);
+  background: var(--surface-control);
+  width: 44px;
+  height: 44px;
+  padding: var(--space-2);
+  border: var(--border-subtle);
+  border-radius: var(--radius-circle);
+  flex-shrink: 0;
+}
+.gecko-button--icon svg { width: 1.25rem; height: 1.25rem; }
+.gecko-button__arrow {
+  display: inline-block;
+  transition: transform var(--motion-fast) var(--ease-gecko);
+}
+.gecko-button::after {
+  content: '';
+  position: absolute;
+  inset: auto var(--space-3) 2px;
+  height: 2px;
+  background: var(--gradient-gecko);
+  opacity: 0;
+  transition: opacity var(--motion-fast) var(--ease-gecko);
+  pointer-events: none;
+}
+.gecko-button--icon::after { content: none; }
+.gecko-button:focus-visible:not(:disabled, [aria-disabled='true'])::after { opacity: 1; }
+.gecko-button:disabled,
+.gecko-button[aria-disabled='true'] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.gecko-label {
+  font-family: var(--font-technical);
+  font-size: var(--type-technical);
+  line-height: 1.5;
+  letter-spacing: var(--tracking-technical);
+  text-transform: uppercase;
+  color: var(--surface-muted);
+}
+.gecko-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: var(--border-subtle);
+  border-radius: var(--radius-small);
+  font-size: var(--type-caption);
+  color: var(--surface-foreground);
+  background: var(--surface-control);
+}
+.gecko-badge--accent::before {
+  content: '';
+  width: var(--space-2);
+  height: var(--space-2);
+  border-radius: var(--radius-circle);
+  background: var(--gradient-gecko);
+}
+
+.gecko-media {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: var(--media-ratio, 1);
+  overflow: hidden;
+  background: var(--surface-background, var(--gecko-off-white));
+}
+.gecko-media > :is(img, video, picture),
+.gecko-media > picture > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.gecko-media--cover > :is(img, video),
+.gecko-media--cover > picture > img { object-fit: cover; }
+.gecko-media > :is(img, video, picture) { position: relative; z-index: var(--z-accent); }
+
+/* Catalog silhouette only. Future Liquid owns product data and interactions. */
+.gecko-card {
+  position: relative;
+  min-width: 0;
+  color: var(--surface-foreground);
+}
+.gecko-card__media { margin-block-end: var(--space-5); }
+.gecko-card__media img { transition: transform var(--motion-standard) var(--ease-gecko); }
+.gecko-card__details { display: grid; gap: var(--space-2); }
+.gecko-card__title { font-size: var(--type-body-large); line-height: var(--leading-heading); font-weight: 600; }
+.gecko-card__meta { font-size: var(--type-body-small); color: var(--surface-muted); }
+.gecko-card__price { font-size: var(--type-body-small); font-variant-numeric: tabular-nums; }
+.gecko-card::after {
+  content: '';
+  display: block;
+  width: var(--space-10);
+  height: 2px;
+  margin-block-start: var(--space-4);
+  background: var(--gradient-gecko);
+  opacity: 0;
+  transition: opacity var(--motion-fast) var(--ease-gecko);
+}
+.gecko-card:focus-within::after { opacity: 1; }
+
+.gecko-gradient-line { height: 2px; background: var(--gradient-gecko); }
+.gecko-disc {
+  aspect-ratio: 1;
+  border-radius: var(--radius-circle);
+  background: var(--gradient-gecko);
+}
+.gecko-contour {
+  aspect-ratio: 1;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-circle);
+}
+/* Decorative light stays behind photography; never overlay/recolor the object. */
+.gecko-media--glow::before {
+  content: '';
+  position: absolute;
+  inset: 10%;
+  border-radius: var(--radius-circle);
+  background: var(--surface-glow);
+  z-index: var(--z-base);
+}
+.gecko-fade-in { animation: gecko-fade-in var(--motion-slow) var(--ease-gecko) both; }
+.gecko-reveal { animation: gecko-reveal var(--motion-slow) var(--ease-gecko) both; }
+@keyframes gecko-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes gecko-reveal {
+  from { opacity: 0; transform: translateY(var(--motion-reveal-distance)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .gecko-button:hover:not(:disabled, [aria-disabled='true'])::after { opacity: 1; }
+  .gecko-button:hover:not(:disabled, [aria-disabled='true']) .gecko-button__arrow { transform: translateX(var(--motion-arrow-distance)); }
+  .gecko-card:hover::after { opacity: 1; }
+  .gecko-card:hover .gecko-card__media img { transform: scale(var(--motion-image-scale)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gecko-fade-in,
+  .gecko-reveal { animation: none; }
+  .gecko-button,
+  .gecko-button::after,
+  .gecko-button__arrow,
+  .gecko-card::after,
+  .gecko-card__media img { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .gecko-button { border-color: ButtonText; }
+  .gecko-button::after,
+  .gecko-card::after,
+  .gecko-badge--accent::before,
+  .gecko-gradient-line { background: Highlight; }
+  .gecko-disc,
+  .gecko-contour { border: 1px solid CanvasText; }
+}
