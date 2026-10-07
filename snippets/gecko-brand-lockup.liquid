@@ -1,0 +1,59 @@
+{% comment %}
+  Two independently editable Shopify images, presented as one home link.
+  Pass the owning section's settings explicitly; no repository/CDN fallbacks.
+{% endcomment %}
+{% liquid
+  assign brand_text = brand_settings.brand_fallback_text | default: shop.name
+  assign mark_width = brand_settings.brand_mark_width | default: 34
+  assign wordmark_width = brand_settings.wordmark_width | default: 120
+  assign brand_gap = brand_settings.brand_gap | default: 10
+  assign mobile_mark_width = mark_width | times: 0.875 | ceil
+  assign mobile_wordmark_width = wordmark_width | times: 0.875 | ceil
+  capture mark_sizes
+    echo '(min-width: 768px) '
+    echo mark_width
+    echo 'px, '
+    echo mobile_mark_width
+    echo 'px'
+  endcapture
+  capture wordmark_sizes
+    echo '(min-width: 768px) '
+    echo wordmark_width
+    echo 'px, '
+    echo mobile_wordmark_width
+    echo 'px'
+  endcapture
+%}
+<a
+  class="gecko-brand-lockup"
+  href="{{ routes.root_url }}"
+  aria-label="{{ 'brand.home' | t: name: brand_text | escape }}"
+  style="--brand-mark-width: {{ mark_width }}px; --brand-wordmark-width: {{ wordmark_width }}px; --brand-gap: {{ brand_gap }}px;"
+>
+  {% if brand_settings.brand_mark != blank %}
+    {{
+      brand_settings.brand_mark
+      | image_url: width: 180
+      | image_tag:
+        class: 'gecko-brand-lockup__mark',
+        widths: '48, 72, 96, 120, 180',
+        sizes: mark_sizes,
+        loading: 'eager',
+        alt: ''
+    }}
+  {% endif %}
+  {% if brand_settings.wordmark != blank %}
+    {{
+      brand_settings.wordmark
+      | image_url: width: 600
+      | image_tag:
+        class: 'gecko-brand-lockup__wordmark',
+        widths: '80, 120, 160, 240, 320, 480, 600',
+        sizes: wordmark_sizes,
+        loading: 'eager',
+        alt: ''
+    }}
+  {% else %}
+    <span class="gecko-brand-lockup__text" aria-hidden="true">{{ brand_text | escape }}</span>
+  {% endif %}
+</a>

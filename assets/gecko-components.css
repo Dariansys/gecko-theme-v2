@@ -1,4 +1,49 @@
 /* Opt-in primitives only: no storefront components or product Liquid in Phase 02. */
+/* Phase 03A: brand area only. Widths are caps, so unusual logo ratios stay intact. */
+.gecko-brand-lockup {
+  --brand-scale: 0.875;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: calc(var(--brand-gap, var(--space-3)) * var(--brand-scale));
+  min-height: 44px;
+  min-width: 0;
+  max-width: 100%;
+  color: inherit;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.gecko-brand-lockup__mark,
+.gecko-brand-lockup__wordmark {
+  display: block;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.gecko-brand-lockup__mark {
+  max-width: calc(var(--brand-mark-width, 34px) * var(--brand-scale));
+  max-height: calc(36px * var(--brand-scale));
+}
+.gecko-brand-lockup__wordmark {
+  max-width: calc(var(--brand-wordmark-width, 120px) * var(--brand-scale));
+  max-height: calc(26px * var(--brand-scale));
+}
+.gecko-brand-lockup__text {
+  font-family: var(--font-gecko);
+  font-size: var(--type-body-large);
+  font-weight: 600;
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-heading);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .gecko-brand-lockup { --brand-scale: 1; }
+}
+
 .gecko-button {
   position: relative;
   display: inline-flex;

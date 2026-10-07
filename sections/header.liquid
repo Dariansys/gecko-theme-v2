@@ -1,7 +1,5 @@
 <header>
-  <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
-  </h2>
+  {% render 'gecko-brand-lockup', brand_settings: section.settings %}
 
   <div class="header__menu">
     {% for link in section.settings.menu.links %}
@@ -61,6 +59,56 @@
 {
   "name": "t:general.header",
   "settings": [
+    {
+      "type": "header",
+      "content": "t:general.brand_lockup"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_mark",
+      "label": "t:labels.brand_mark"
+    },
+    {
+      "type": "range",
+      "id": "brand_mark_width",
+      "label": "t:labels.brand_mark_width",
+      "min": 24,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 34
+    },
+    {
+      "type": "image_picker",
+      "id": "wordmark",
+      "label": "t:labels.wordmark"
+    },
+    {
+      "type": "range",
+      "id": "wordmark_width",
+      "label": "t:labels.wordmark_width",
+      "min": 80,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "brand_gap",
+      "label": "t:labels.brand_gap",
+      "min": 4,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "text",
+      "id": "brand_fallback_text",
+      "label": "t:labels.brand_fallback_text",
+      "info": "t:labels.brand_fallback_text_info"
+    },
     {
       "type": "link_list",
       "id": "menu",

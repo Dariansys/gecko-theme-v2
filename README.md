@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 02 design system
+- Status: Under Development — Phase 03A brand lockup foundation
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -74,6 +74,15 @@ It supplies tokens, light/dark surfaces, fluid typography, containers and opt-in
 visual primitives. The inherited storefront sections are still scaffolding.
 No homepage, header, footer, catalog page, cart or search has been built.
 Stop after Phase 02; later phases require explicit instructions.
+
+## Phase 03A brand assets
+
+[docs/brand-assets.md](docs/brand-assets.md) describes image ownership and the
+dual-logo Header settings. Brand mark and wordmark are independent Theme Editor
+uploads, with responsive size caps and a shop-name/text fallback. Only the brand
+area is implemented; no full header, navigation or mobile-menu design is added.
+Upload/replacement verification runs in the local unpublished Shopify preview.
+Stop after Phase 03A until further work is explicitly authorized.
 
 ## Folder structure
 

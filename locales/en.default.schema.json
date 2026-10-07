@@ -1,5 +1,6 @@
 {
   "general": {
+    "brand_lockup": "Brand lockup",
     "404": "Not found",
     "article": "Article",
     "block": "Block",
@@ -34,6 +35,13 @@
     "typography": "Typography"
   },
   "labels": {
+    "brand_mark": "Brand mark image",
+    "brand_mark_width": "Brand mark maximum width",
+    "wordmark": "Wordmark image",
+    "wordmark_width": "Wordmark maximum width",
+    "brand_gap": "Gap between mark and wordmark",
+    "brand_fallback_text": "Fallback brand text",
+    "brand_fallback_text_info": "Leave blank to use the shop name. Also names the home link for screen readers. Widths preserve image proportions; use tightly cropped logos without excess transparent padding.",
     "alignment": "Alignment",
     "background": "Background",
     "foreground": "Foreground",
