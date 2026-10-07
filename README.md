@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 03B desktop header
+- Status: Under Development — Phase 03C mobile header and menu
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -92,6 +92,15 @@ Main menu and action/sticky toggles in Header settings. Desktop navigation appea
 from 1024px; smaller screens keep the brand and Bag without a mobile menu.
 Review real storefront routes and Theme Editor behavior locally. Stop after
 Phase 03B until the next scope is explicitly authorized.
+
+## Phase 03C mobile navigation
+
+[docs/mobile-header.md](docs/mobile-header.md) covers the mobile drawer, nested
+submenus, keyboard focus and scroll locking. Below 1024px the Header shows the
+existing brand, Bag and Menu trigger. Search/Account are inside the drawer;
+desktop behavior resumes at 1024px. No new settings or dependencies are added.
+Validate native dialog and Theme Editor behavior in the local unpublished
+Shopify preview. Stop after Phase 03C until further work is explicitly authorized.
 
 ## Folder structure
 

@@ -1,0 +1,105 @@
+<gecko-mobile-menu>
+  <button
+    class="gecko-header__menu-trigger"
+    type="button"
+    aria-label="{{ 'header.open_menu' | t | escape }}"
+    aria-expanded="false"
+    aria-controls="GeckoMobileMenu-{{ section_id }}"
+    hidden
+    data-menu-open
+  >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+    </svg>
+  </button>
+  <dialog
+    id="GeckoMobileMenu-{{ section_id }}"
+    class="gecko-mobile-menu surface-light"
+    aria-labelledby="GeckoMobileMenuTitle-{{ section_id }}"
+    scroll-lock
+  >
+    <div class="gecko-mobile-menu__top">
+      <h2 id="GeckoMobileMenuTitle-{{ section_id }}" class="gecko-label">{{ 'header.menu' | t }}</h2>
+      <button class="gecko-mobile-menu__close" type="button" data-menu-close autofocus>
+        <span>{{ 'header.close_menu' | t }}</span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+          <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+      </button>
+    </div>
+    <div class="gecko-mobile-menu__content">
+      {% if header_settings.menu.links != blank %}
+        <nav aria-label="{{ 'header.navigation' | t | escape }}">
+          <ul class="gecko-mobile-menu__list" role="list">
+            {% for link in header_settings.menu.links %}
+              <li>
+                <div class="gecko-mobile-menu__row">
+                  <a class="gecko-mobile-menu__primary" href="{{ link.url | escape }}"{% if link.current %} aria-current="page"{% endif %}>
+                    {{ link.title | escape }}
+                  </a>
+                  {% if link.links != blank %}
+                    <button
+                      class="gecko-mobile-menu__toggle"
+                      type="button"
+                      aria-label="{{ 'header.toggle_submenu' | t: title: link.title | escape }}"
+                      aria-expanded="false"
+                      aria-controls="GeckoSubmenu-{{ section_id }}-{{ forloop.index }}"
+                      data-submenu-toggle
+                    >
+                      <span aria-hidden="true" data-submenu-icon>+</span>
+                    </button>
+                  {% endif %}
+                </div>
+                {% if link.links != blank %}
+                  {% assign parent_index = forloop.index %}
+                  <ul id="GeckoSubmenu-{{ section_id }}-{{ parent_index }}" class="gecko-mobile-menu__children" role="list" hidden>
+                    {% for child_link in link.links %}
+                      <li>
+                        <div class="gecko-mobile-menu__row">
+                          <a class="gecko-mobile-menu__secondary" href="{{ child_link.url | escape }}"{% if child_link.current %} aria-current="page"{% endif %}>
+                            {{ child_link.title | escape }}
+                          </a>
+                          {% if child_link.links != blank %}
+                            <button
+                              class="gecko-mobile-menu__toggle"
+                              type="button"
+                              aria-label="{{ 'header.toggle_submenu' | t: title: child_link.title | escape }}"
+                              aria-expanded="false"
+                              aria-controls="GeckoSubmenu-{{ section_id }}-{{ parent_index }}-{{ forloop.index }}"
+                              data-submenu-toggle
+                            >
+                              <span aria-hidden="true" data-submenu-icon>+</span>
+                            </button>
+                          {% endif %}
+                        </div>
+                        {% if child_link.links != blank %}
+                          <ul id="GeckoSubmenu-{{ section_id }}-{{ parent_index }}-{{ forloop.index }}" class="gecko-mobile-menu__children" role="list" hidden>
+                            {% for grandchild_link in child_link.links %}
+                              <li>
+                                <a class="gecko-mobile-menu__secondary" href="{{ grandchild_link.url | escape }}"{% if grandchild_link.current %} aria-current="page"{% endif %}>
+                                  {{ grandchild_link.title | escape }}
+                                </a>
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        {% endif %}
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+      {% endif %}
+      <div class="gecko-mobile-menu__utilities">
+        {% if header_settings.show_search %}
+          <a href="{{ routes.search_url }}">{{ 'header.search' | t }}</a>
+        {% endif %}
+        {% if header_settings.show_account and shop.customer_accounts_enabled %}
+          <a href="{{ routes.account_url }}">{{ 'header.account' | t }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </dialog>
+</gecko-mobile-menu>

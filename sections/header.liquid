@@ -1,4 +1,5 @@
 {{ 'gecko-header.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'gecko-header.js' | asset_url }}" defer></script>
 <header class="gecko-header surface-light" data-sticky="{{ section.settings.sticky_header }}">
   <div class="gecko-header__inner gecko-container gecko-container--wide">
     <div class="gecko-header__brand">
@@ -29,6 +30,7 @@
           <span class="gecko-visually-hidden">{{ 'header.cart_count' | t: count: cart.item_count }}</span>
         {% endif %}
       </a>
+      {% render 'gecko-mobile-navigation', header_settings: section.settings, section_id: section.id %}
     </div>
   </div>
 </header>

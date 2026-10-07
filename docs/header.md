@@ -63,6 +63,9 @@ three-column desktop layout appears. No mobile menu is built, so desktop menu
 destinations are intentionally unavailable from this header on smaller screens
 until the next authorized phase. Focus and motion preferences reuse Phase 02.
 
+Phase 03C supersedes this smaller-screen preparation: see [mobile-header.md](mobile-header.md)
+for the mobile Menu trigger/drawer and Search/Account placement below 1024px.
+
 ## Validation and local review
 
 Theme Check inspected 45 files with no offenses. Temporary local Liquid fixtures
