@@ -100,8 +100,11 @@
         "balisongs": {
           "type": "category",
           "settings": {
+            "image": "shopify://shop_images/photos-pulse12.jpg",
             "label": "BALISONGS",
             "description": "Designed for flow.",
+            "link": "",
+            "alt": "",
             "accent": "warm",
             "image_fit": "cover"
           }
@@ -109,8 +112,11 @@
         "folders": {
           "type": "category",
           "settings": {
+            "image": "shopify://shop_images/img_0008.jpg",
             "label": "FOLDERS",
             "description": "Built to carry.",
+            "link": "",
+            "alt": "",
             "accent": "cool",
             "image_fit": "cover"
           }
@@ -121,7 +127,9 @@
         "folders"
       ],
       "settings": {
-        "heading": "Explore the collection"
+        "eyebrow": "",
+        "heading": "Explore the collection",
+        "description": ""
       }
     }
   },
