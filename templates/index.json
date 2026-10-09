@@ -113,6 +113,7 @@
           "type": "category",
           "settings": {
             "image": "shopify://shop_images/img_0008.jpg",
+            "mobile_image": "shopify://shop_images/DSC00371.jpg",
             "label": "FOLDERS",
             "description": "Built to carry.",
             "link": "",
