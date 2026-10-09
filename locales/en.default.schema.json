@@ -94,6 +94,35 @@
       "title": "Title",
       "subtitle": "Subtitle",
       "normal": "Normal text"
-    },
+    }
+  },
+  "hero": {
+    "name": "Gecko hero",
+    "eyebrow": "Eyebrow",
+    "headline": "Headline",
+    "headline_accent": "Accent word or phrase",
+    "headline_accent_info": "Optional: enter a short phrase exactly as it appears in the headline. Only its first occurrence is colored. The whole headline cannot be accented.",
+    "body": "Body text",
+    "primary_label": "Primary CTA label",
+    "primary_link": "Primary CTA link",
+    "primary_link_info": "Leave blank to link to all products using the Shopify route.",
+    "secondary_label": "Secondary CTA label",
+    "secondary_link": "Secondary CTA link",
+    "hero_image": "Hero image",
+    "image_info": "Use a tightly cropped transparent product image to reveal the gradient behind it. Opaque photography keeps its original background.",
+    "mobile_image": "Mobile hero image",
+    "mobile_image_info": "Optional alternative image below 768px. Falls back to the hero image.",
+    "image_alt": "Image alt text",
+    "image_alt_info": "Describe the featured product. Leave blank to use the image library alt text; decorative images may use empty alt text.",
+    "show_gradient": "Show Gecko gradient accent",
+    "gradient_intensity": "Gradient intensity",
+    "subtle": "Subtle",
+    "standard": "Standard",
+    "defaults": {
+      "eyebrow": "GECKO / EVERYDAY CARRY",
+      "headline": "DESIGNED\nTO BE USED.",
+      "body": "Precision-machined tools designed for everyday interaction.",
+      "primary_label": "Explore products"
+    }
   }
 }

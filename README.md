@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 03C mobile header and menu
+- Status: Under Development — Phase 03D-1 static homepage hero
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -101,6 +101,15 @@ existing brand, Bag and Menu trigger. Search/Account are inside the drawer;
 desktop behavior resumes at 1024px. No new settings or dependencies are added.
 Validate native dialog and Theme Editor behavior in the local unpublished
 Shopify preview. Stop after Phase 03C until further work is explicitly authorized.
+
+## Phase 03D-1 static hero
+
+[docs/static-hero.md](docs/static-hero.md) describes the editable two-column
+homepage hero, Gecko glow, optional headline accent and desktop/mobile image
+pickers. Upload production photography and review copy in the local Theme Editor.
+The existing Header is preserved. No carousel, scroll effects or additional
+homepage sections are included. Stop after this static design until further
+work is explicitly authorized.
 
 ## Folder structure
 
