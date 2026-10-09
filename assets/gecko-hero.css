@@ -20,6 +20,33 @@
   overflow-wrap: anywhere;
 }
 .gecko-hero__headline-accent { color: var(--gecko-crimson); }
+.gecko-hero__headline-line { display: block; }
+.gecko-hero { --motion-arrow-distance: 4px; }
+.gecko-hero .gecko-button--primary:focus-visible .gecko-button__arrow { transform: translateX(var(--motion-arrow-distance)); }
+/* Hidden entrance states exist only after successful JS enhancement. */
+.gecko-hero.is-entrance-pending .gecko-hero__reveal { opacity: 0; transform: translateY(20px); }
+.gecko-hero.is-entrance-pending .gecko-hero__media { opacity: 0; transform: translateY(10px) scale(1.025); }
+.gecko-hero.is-entering .gecko-hero__reveal {
+  animation: gecko-hero-text-enter 600ms var(--ease-gecko) var(--hero-reveal-delay, 0ms) both;
+}
+.gecko-hero.is-entering .gecko-hero__media {
+  animation: gecko-hero-media-enter 800ms var(--ease-gecko) 140ms both;
+}
+@keyframes gecko-hero-text-enter {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes gecko-hero-media-enter {
+  from { opacity: 0; transform: translateY(10px) scale(1.025); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.gecko-hero__control span, .gecko-hero__dot span { transition: opacity var(--motion-fast), transform var(--motion-fast); }
+.gecko-hero__control span { opacity: 0.85; }
+.gecko-hero__control:focus-visible span, .gecko-hero__dot:focus-visible span { opacity: 1; }
+@media (hover: hover) {
+  .gecko-hero__control:hover span { opacity: 1; }
+  .gecko-hero__dot:hover span { opacity: 1; transform: scale(1.2); }
+}
 @supports (color: color-mix(in srgb, black, white)) and ((background-clip: text) or (-webkit-background-clip: text)) {
   .gecko-hero__headline-accent {
     background: linear-gradient(110deg, var(--gecko-orange) 0%, var(--gecko-red) 24%, var(--gecko-crimson) 44%, var(--gecko-wine) 58%, color-mix(in srgb, var(--gecko-cyan) 65%, var(--gecko-black)) 78%, color-mix(in srgb, var(--gecko-teal) 75%, var(--gecko-black)) 100%);
@@ -185,6 +212,12 @@
   .gecko-hero__picture { object-position: var(--hero-mobile-position, 50% 50%); }
 }
 @media (prefers-reduced-motion: reduce) {
+  .gecko-hero { --motion-arrow-distance: 0px; }
+  .gecko-hero.is-entrance-pending .gecko-hero__reveal,
+  .gecko-hero.is-entrance-pending .gecko-hero__media,
+  .gecko-hero.is-entering .gecko-hero__reveal,
+  .gecko-hero.is-entering .gecko-hero__media { animation: none; opacity: 1; transform: none; }
+  .gecko-hero__control span, .gecko-hero__dot span, .gecko-hero__dot:hover span { transition: none; transform: none; }
   .gecko-hero__slide { transition: none; }
   .gecko-hero__play { display: none; }
 }

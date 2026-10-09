@@ -1,4 +1,4 @@
-# Phase 03D-4 — Gradient headline and Hero slideshow
+# Hero — Slideshow and Phase 03D-5 entrance motion
 
 The approved Hero layout and Header stay intact. The editable accent now uses
 a warm-to-cool Gecko text gradient, including the period in the default `Gecko.`
@@ -58,6 +58,28 @@ disconnect/reconnect cleans up listeners and timers to avoid duplicate playback.
 
 ## Validation
 
+Phase 03D-5 adds a separate IntersectionObserver entrance enhancement. Eyebrow,
+headline lines, body and CTA group enter in order with 90ms stagger, 600ms duration
+and 20px upward travel. The gradient span moves with its complete headline line.
+The media stage fades from 1.025 scale and 10px offset over 800ms, with a 140ms
+delay. CSS keyframes animate only opacity/transform; slideshow timing and slide
+transitions are unchanged. Primary CTA hover/focus moves its arrow 4px, while
+carousel control feedback stays restrained.
+
+Content is visible by default. Only successful JS enhancement arms the entrance;
+the observer disconnects after first visibility. Completion, focus, preference
+changes and section removal release entrance states. A visibility fail-safe
+prevents a missing observer callback from leaving an on-screen Hero hidden.
+Reduced motion, Theme Editor and browsers without IntersectionObserver bypass
+entrance motion. No animation library, Liquid/schema change or copy change is
+introduced. Validate real-device first-paint behavior in the local preview.
+
+The slideshow fixture regression suite passed 84 cases with entrance enhancement
+bypassed, isolating the approved slideshow behavior. Separate entrance browser
+checks cover the requested widths, stagger order, whole-line gradient, media
+motion, autoplay with entrance enabled, one-time/offscreen entry, CTA focus, reduced motion, editor visibility,
+observer failure and no-JavaScript visibility.
+
 Theme Check inspected 49 files with no offenses. Chromium passed 84 responsive
 fixtures across 375, 390, 430, 768, 1024, 1440 and 1920px, covering 2–5 slides,
 single/empty/fallback images, long captions and optional controls. Interaction
@@ -68,5 +90,5 @@ Local fixtures render the actual Liquid, CSS and JavaScript with mocked Shopify
 image filters/globals; photography remains temporary test imagery outside Git.
 Review real photography, crop/focal points, captions and native editor controls in
 the local unpublished Shopify preview. Codex Cloud does not authenticate,
-synchronize or publish Shopify themes. Stop after this Hero task; no scroll
-reveals, additional homepage sections, drawers or product/collection work.
+synchronize or publish Shopify themes. Stop after this Hero task; no page-wide
+scroll reveals, additional homepage sections, drawers or product/collection work.

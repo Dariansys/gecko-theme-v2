@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 03D-4 Hero slideshow and gradient headline
+- Status: Under Development — Phase 03D-5 Hero entrance motion
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -102,12 +102,14 @@ desktop behavior resumes at 1024px. No new settings or dependencies are added.
 Validate native dialog and Theme Editor behavior in the local unpublished
 Shopify preview. Stop after Phase 03C until further work is explicitly authorized.
 
-## Phase 03D-4 Hero slideshow
+## Phase 03D-5 Hero entrance motion
 
 [docs/hero-slideshow.md](docs/hero-slideshow.md) describes the editable gradient
 headline and campaign slideshow. Add 2–5 image blocks in the local Theme Editor;
 adjust mobile photography, focal points, captions and autoplay as needed. Existing
-Hero settings and the Header are preserved. No scroll effects or additional
+Hero settings and the Header are preserved. The Hero now enters once with a
+restrained stagger and media fade/scale; editor and reduced-motion modes stay
+immediately visible. No page-wide scroll effects or additional
 homepage sections are included. Stop after this Hero task until further work is
 explicitly authorized. The earlier static design is recorded in
 [docs/static-hero.md](docs/static-hero.md).

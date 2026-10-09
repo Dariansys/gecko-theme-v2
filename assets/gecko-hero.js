@@ -1,3 +1,71 @@
+/* Entrance enhancement is independent of slideshow timing and navigation. */
+function enhanceGeckoHeroEntrance(root) {
+  if (!root || root.dataset.entranceComplete) return;
+  const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  if (motion.matches || window.Shopify?.designMode || !('IntersectionObserver' in window)) return;
+  const abort = new AbortController();
+  let observer, fallback, completion;
+  const finish = () => {
+    clearTimeout(fallback);
+    clearTimeout(completion);
+    observer?.disconnect();
+    abort.abort();
+    root.classList.remove('is-entrance-pending', 'is-entering');
+    root.dataset.entranceComplete = 'true';
+  };
+  try {
+    const headline = root.querySelector('.gecko-hero__headline');
+    if (headline && !headline.querySelector('.gecko-hero__headline-line')) {
+      const lines = document.createDocumentFragment();
+      let line = document.createElement('span');
+      line.className = 'gecko-hero__headline-line';
+      lines.append(line);
+      // Move existing nodes so escaped copy and the gradient span remain intact.
+      [...headline.childNodes].forEach(node => {
+        if (node.nodeName === 'BR') {
+          line = document.createElement('span');
+          line.className = 'gecko-hero__headline-line';
+          lines.append(line);
+        } else line.append(node);
+      });
+      headline.replaceChildren(lines);
+    }
+    const targets = [
+      root.querySelector('.gecko-hero__eyebrow'),
+      ...root.querySelectorAll('.gecko-hero__headline-line'),
+      root.querySelector('.gecko-hero__body'),
+      root.querySelector('.gecko-hero__actions'),
+    ].filter(Boolean);
+    targets.forEach((target, index) => {
+      target.classList.add('gecko-hero__reveal');
+      target.style.setProperty('--hero-reveal-delay', `${Math.min(index, 8) * 90}ms`);
+    });
+    observer = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      observer.disconnect();
+      clearTimeout(fallback);
+      if (motion.matches || window.Shopify?.designMode) return finish();
+      root.classList.remove('is-entrance-pending');
+      root.classList.add('is-entering');
+      completion = setTimeout(finish, Math.max(1100, targets.length * 90 + 650));
+    }, { threshold: 0 });
+    motion.addEventListener('change', event => { if (event.matches) finish(); }, { signal: abort.signal });
+    root.addEventListener('focusin', finish, { once: true, signal: abort.signal });
+    root.classList.add('is-entrance-pending');
+    observer.observe(root);
+    // Recover visibility if an observer fails to deliver its initial callback.
+    // Offscreen Heroes remain observed and can still enter later.
+    fallback = setTimeout(() => {
+      const rect = root.getBoundingClientRect();
+      root.classList.remove('is-entrance-pending');
+      if (rect.bottom > 0 && rect.top < innerHeight) finish();
+    }, 1800);
+  } catch {
+    finish();
+  }
+  return finish;
+}
+
 /* Each section owns its listeners and timer, including Theme Editor reloads. */
 if (!customElements.get('gecko-hero-slideshow')) {
   customElements.define('gecko-hero-slideshow', class extends HTMLElement {
@@ -5,10 +73,12 @@ if (!customElements.get('gecko-hero-slideshow')) {
       queueMicrotask(() => {
         if (!this.isConnected || this.abort) return;
         this.init();
+        this.finishEntrance = enhanceGeckoHeroEntrance(this.closest('.gecko-hero'));
       });
     }
 
     disconnectedCallback() {
+      this.finishEntrance?.();
       this.clearTimer();
       this.abort?.abort();
       this.abort = null;
