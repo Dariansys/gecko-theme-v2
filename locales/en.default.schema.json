@@ -142,5 +142,31 @@
     "seconds_5": "5 seconds",
     "seconds_6": "6 seconds",
     "seconds_8": "8 seconds"
+  },
+  "category_showcase": {
+    "name": "Category showcase",
+    "eyebrow": "Eyebrow",
+    "heading": "Heading",
+    "description": "Short description",
+    "category": "Category",
+    "image": "Image",
+    "image_info": "Use category photography. Set a focal point in the image editor or choose Fit entire image to prevent cropping.",
+    "mobile_image": "Mobile image",
+    "mobile_info": "Optional image below 768px. Falls back to the main image.",
+    "label": "Category label",
+    "link": "Category link",
+    "link_info": "Choose the category destination. Blank links use the Shopify all-products route.",
+    "alt": "Image alt text",
+    "alt_info": "Describe the photograph accurately for desktop and mobile. Blank uses the image library alt text; decorative images may use empty alt text.",
+    "accent": "Color accent",
+    "warm": "Warm Gecko",
+    "cool": "Cool Gecko",
+    "none": "None",
+    "image_fit": "Image presentation",
+    "cover": "Fill frame",
+    "contain": "Fit entire image",
+    "defaults": {
+      "heading": "Explore the collection"
+    }
   }
 }

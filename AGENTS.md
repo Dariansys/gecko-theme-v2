@@ -54,8 +54,8 @@ These rules apply to every file in this project.
 
 ## Scope and store protection
 
-Phase 03D-5 adds one-time Hero entrance motion and restrained control feedback only. Preserve Hero copy, layout, slideshow architecture, autoplay logic, all settings and the approved desktop/mobile Header. See docs/hero-slideshow.md and the earlier design/header guides. Stop before subsequent work until explicitly instructed.
-Keep inherited Skeleton source components unchanged outside authorized work. Do not create page-wide scroll animation, parallax, additional homepage sections, mega menu, footer, collection page, product page, cart drawer, search overlay or functional Shopify product cards in this phase.
+Phase 04A adds the category showcase directly below the approved Hero only. Preserve the Hero, all its settings/behavior and the approved desktop/mobile Header. See docs/category-showcase.md and the earlier design/header guides. Stop before subsequent work until explicitly instructed.
+Keep inherited Skeleton source components unchanged outside authorized work. Do not create complex animation, parallax, further homepage sections, product grids, mega menu, footer, collection page, product page, cart drawer, search overlay or functional Shopify product cards in this phase.
 Use Codex Cloud for coding and static validation, GitHub for source control, and local Shopify CLI for preview and theme synchronization. Do not attempt Shopify authentication, theme pushes or publication from Codex Cloud. Commit and push work to dev/gecko-v2.
 Do not migrate old Gecko code, assets, layouts, CSS, or JavaScript.
 Never delete or modify products, variants, collections, inventory, customers, orders, payments, shipping settings, or domain settings as part of theme development.

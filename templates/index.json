@@ -93,9 +93,40 @@
         "show_pagination": true,
         "show_counter": true
       }
+    },
+    "category_showcase": {
+      "type": "gecko-category-showcase",
+      "blocks": {
+        "balisongs": {
+          "type": "category",
+          "settings": {
+            "label": "BALISONGS",
+            "description": "Designed for flow.",
+            "accent": "warm",
+            "image_fit": "cover"
+          }
+        },
+        "folders": {
+          "type": "category",
+          "settings": {
+            "label": "FOLDERS",
+            "description": "Built to carry.",
+            "accent": "cool",
+            "image_fit": "cover"
+          }
+        }
+      },
+      "block_order": [
+        "balisongs",
+        "folders"
+      ],
+      "settings": {
+        "heading": "Explore the collection"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "category_showcase"
   ]
 }

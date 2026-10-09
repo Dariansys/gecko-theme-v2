@@ -1,0 +1,93 @@
+{{ 'gecko-category-showcase.css' | asset_url | stylesheet_tag }}
+<section class="gecko-categories surface-light gecko-section-space" {% if section.settings.heading != blank %}aria-labelledby="GeckoCategoriesTitle-{{ section.id }}"{% endif %}>
+  <div class="gecko-container gecko-container--wide">
+    <div class="gecko-categories__header">
+      {% if section.settings.eyebrow != blank %}<p class="gecko-label">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+      {% if section.settings.heading != blank %}<h2 id="GeckoCategoriesTitle-{{ section.id }}" class="gecko-categories__heading">{{ section.settings.heading | escape }}</h2>{% endif %}
+      {% if section.settings.description != blank %}<p class="gecko-categories__intro gecko-body-large">{{ section.settings.description | escape | newline_to_br }}</p>{% endif %}
+    </div>
+    {% if section.blocks.size > 0 %}
+      <ul class="gecko-categories__grid" role="list">
+        {% for block in section.blocks %}
+          {% liquid
+            assign image = block.settings.image | default: block.settings.mobile_image
+            assign image_alt = block.settings.alt | default: image.alt
+            assign focal = image.presentation.focal_point | default: '50% 50%'
+            assign mobile_focal = block.settings.mobile_image.presentation.focal_point | default: focal
+            assign link = block.settings.link | default: routes.all_products_collection_url
+            assign link_label = block.settings.label | default: image_alt
+            if link_label == blank
+              assign link_label = 'category_showcase.open_category' | t
+            endif
+          %}
+          <li {{ block.shopify_attributes }}>
+            <a class="gecko-categories__card" href="{{ link | escape }}" data-accent="{{ block.settings.accent | escape }}" data-image-fit="{{ block.settings.image_fit | escape }}" {% if block.settings.label == blank %}aria-label="{{ link_label | escape }}"{% endif %}>
+              <div class="gecko-categories__media">
+                {% if image != blank %}
+                  <picture class="gecko-categories__picture" style="--category-focal: {{ focal | escape }}; --category-mobile-focal: {{ mobile_focal | escape }};">
+                    {% if block.settings.mobile_image != blank %}
+                      <source media="(max-width: 767px)"
+                        srcset="{% assign widths = '400,600,800' | split: ',' %}{% for width in widths %}{% assign candidate = width | plus: 0 %}{% if candidate < block.settings.mobile_image.width %}{{ block.settings.mobile_image | image_url: width: candidate }} {{ candidate }}w, {% endif %}{% endfor %}{{ block.settings.mobile_image | image_url: width: 1200 }} {{ block.settings.mobile_image.width | at_most: 1200 }}w"
+                        sizes="calc(100vw - 2rem)" width="{{ block.settings.mobile_image.width }}" height="{{ block.settings.mobile_image.height }}">
+                    {% endif %}
+                    {{ image | image_url: width: 1800 | image_tag:
+                      class: 'gecko-categories__image',
+                      widths: '400, 600, 800, 1000, 1200, 1600, 1800',
+                      sizes: '(min-width: 1920px) 780px, (min-width: 768px) 46vw, calc(100vw - 2rem)',
+                      loading: 'lazy', fetchpriority: 'low', style: 'object-position: inherit;', alt: image_alt
+                    }}
+                  </picture>
+                {% elsif request.design_mode %}
+                  <p class="gecko-categories__image-hint">{{ 'category_showcase.image_hint' | t }}</p>
+                {% endif %}
+              </div>
+              <div class="gecko-categories__copy">
+                <div>
+                  {% if block.settings.label != blank %}<h3 class="gecko-categories__label">{{ block.settings.label | escape }}</h3>{% endif %}
+                  {% if block.settings.description != blank %}<p class="gecko-categories__description">{{ block.settings.description | escape | newline_to_br }}</p>{% endif %}
+                </div>
+                <span class="gecko-categories__arrow" aria-hidden="true">→</span>
+              </div>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</section>
+{% schema %}
+{
+  "name": "t:category_showcase.name",
+  "class": "gecko-category-showcase-section",
+  "enabled_on": { "templates": ["index"] },
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "t:category_showcase.eyebrow" },
+    { "type": "text", "id": "heading", "label": "t:category_showcase.heading", "default": "t:category_showcase.defaults.heading" },
+    { "type": "textarea", "id": "description", "label": "t:category_showcase.description" }
+  ],
+  "blocks": [{
+    "type": "category", "name": "t:category_showcase.category", "settings": [
+      { "type": "image_picker", "id": "image", "label": "t:category_showcase.image", "info": "t:category_showcase.image_info" },
+      { "type": "image_picker", "id": "mobile_image", "label": "t:category_showcase.mobile_image", "info": "t:category_showcase.mobile_info" },
+      { "type": "text", "id": "label", "label": "t:category_showcase.label" },
+      { "type": "textarea", "id": "description", "label": "t:category_showcase.description" },
+      { "type": "url", "id": "link", "label": "t:category_showcase.link", "info": "t:category_showcase.link_info" },
+      { "type": "text", "id": "alt", "label": "t:category_showcase.alt", "info": "t:category_showcase.alt_info" },
+      { "type": "select", "id": "accent", "label": "t:category_showcase.accent", "options": [
+        { "value": "warm", "label": "t:category_showcase.warm" },
+        { "value": "cool", "label": "t:category_showcase.cool" },
+        { "value": "none", "label": "t:category_showcase.none" }
+      ], "default": "warm" },
+      { "type": "select", "id": "image_fit", "label": "t:category_showcase.image_fit", "options": [
+        { "value": "cover", "label": "t:category_showcase.cover" },
+        { "value": "contain", "label": "t:category_showcase.contain" }
+      ], "default": "cover" }
+    ]
+  }],
+  "presets": [{ "name": "t:category_showcase.name", "blocks": [
+    { "type": "category", "settings": { "label": "BALISONGS", "description": "Designed for flow.", "accent": "warm" } },
+    { "type": "category", "settings": { "label": "FOLDERS", "description": "Built to carry.", "accent": "cool" } }
+  ] }]
+}
+{% endschema %}

@@ -1,0 +1,62 @@
+/* Category links, scoped independently of the approved Hero and Header. */
+.shopify-section.gecko-category-showcase-section { display: block; }
+.gecko-categories__header { max-width: 46rem; margin-block-end: var(--space-10); }
+.gecko-categories__heading { font-size: var(--type-h1); font-weight: 700; line-height: var(--leading-heading); overflow-wrap: anywhere; }
+.gecko-categories__header .gecko-label { margin-block-end: var(--space-4); }
+.gecko-categories__intro { color: var(--surface-muted); margin-block-start: var(--space-5); }
+.gecko-categories__grid { display: grid; gap: var(--space-6); padding: 0; margin: 0; list-style: none; }
+.gecko-categories__grid > li { min-width: 0; }
+.gecko-categories__card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: var(--border-subtle);
+  border-radius: calc(var(--radius-large) * 2);
+  overflow: hidden;
+  color: var(--surface-foreground);
+  background: var(--gecko-white);
+  text-decoration: none;
+}
+.gecko-categories__media { position: relative; isolation: isolate; aspect-ratio: 4 / 5; overflow: hidden; background: var(--gecko-off-white); }
+.gecko-categories__media::before { content: ''; position: absolute; inset: 0; background: var(--category-field, none); pointer-events: none; }
+.gecko-categories__card[data-accent='warm'] {
+  --category-field: radial-gradient(ellipse 75% 85% at 12% 85%, var(--gecko-orange) 0% 35%, transparent 74%), radial-gradient(ellipse 60% 65% at 90% 15%, var(--gecko-wine) 0% 30%, transparent 72%);
+  --category-line: linear-gradient(110deg, var(--gecko-orange), var(--gecko-crimson), var(--gecko-wine));
+}
+.gecko-categories__card[data-accent='cool'] {
+  --category-field: radial-gradient(ellipse 75% 85% at 88% 15%, var(--gecko-cyan) 0% 35%, transparent 74%), radial-gradient(ellipse 60% 65% at 10% 85%, var(--gecko-teal) 0% 30%, transparent 72%);
+  --category-line: linear-gradient(110deg, var(--gecko-cyan), var(--gecko-teal));
+}
+.gecko-categories__picture { position: absolute; inset: 0; display: block; object-position: var(--category-focal, 50% 50%); }
+.gecko-categories__image { width: 100%; height: 100%; object-fit: cover; object-position: inherit; transition: transform var(--motion-standard) var(--ease-gecko); }
+.gecko-categories__card[data-image-fit='contain'] .gecko-categories__image { object-fit: contain; }
+.gecko-categories__copy { position: relative; display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); padding: var(--space-6); flex: 1; }
+.gecko-categories__copy::before { content: ''; position: absolute; inset: 0 0 auto; height: 3px; background: var(--category-line, none); }
+.gecko-categories__copy > div { min-width: 0; }
+.gecko-categories__label { font-size: var(--type-h3); font-weight: 700; letter-spacing: var(--tracking-heading); overflow-wrap: anywhere; }
+.gecko-categories__description { margin-block-start: var(--space-2); color: var(--surface-muted); overflow-wrap: anywhere; }
+.gecko-categories__arrow { flex-shrink: 0; font-size: var(--type-h3); transition: transform var(--motion-fast) var(--ease-gecko); }
+.gecko-categories__image-hint { position: absolute; inset: auto var(--space-6) var(--space-6); padding: var(--space-3); background: var(--gecko-white); color: var(--gecko-black); font-size: var(--type-body-small); }
+.gecko-categories__card:focus-visible .gecko-categories__image { transform: scale(var(--motion-image-scale)); }
+.gecko-categories__card:focus-visible .gecko-categories__arrow { transform: translateX(4px); }
+@media (hover: hover) {
+  .gecko-categories__card:hover .gecko-categories__image { transform: scale(var(--motion-image-scale)); }
+  .gecko-categories__card:hover .gecko-categories__arrow { transform: translateX(4px); }
+}
+@media (max-width: 767px) {
+  .gecko-categories__picture { object-position: var(--category-mobile-focal, 50% 50%); }
+}
+@media (min-width: 768px) {
+  .gecko-categories__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8); }
+  .gecko-categories__media { aspect-ratio: 4 / 3; }
+  .gecko-categories__copy { padding: var(--space-8); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gecko-categories__image, .gecko-categories__arrow { transition: none; }
+  .gecko-categories__card:is(:hover, :focus-visible) .gecko-categories__image,
+  .gecko-categories__card:is(:hover, :focus-visible) .gecko-categories__arrow { transform: none; }
+}
+@media (forced-colors: active) {
+  .gecko-categories__media::before, .gecko-categories__copy::before { display: none; }
+  .gecko-categories__card { border-color: CanvasText; }
+}

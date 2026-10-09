@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 03D-5 Hero entrance motion
+- Status: Under Development — Phase 04A homepage category showcase
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -113,6 +113,15 @@ immediately visible. No page-wide scroll effects or additional
 homepage sections are included. Stop after this Hero task until further work is
 explicitly authorized. The earlier static design is recorded in
 [docs/static-hero.md](docs/static-hero.md).
+
+## Phase 04A category showcase
+
+[docs/category-showcase.md](docs/category-showcase.md) covers the new section
+directly below the approved Hero. BALISONGS and FOLDERS are the two editable
+initial cards. Upload category photography and select category links in the local
+Theme Editor. Cards stack on mobile and form two columns from 768px; Warm/Cool/None
+accents and crop/contain presentation are configurable. The Hero and Header are
+preserved. Stop after this section until further work is explicitly authorized.
 
 ## Folder structure
 

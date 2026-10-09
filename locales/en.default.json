@@ -88,5 +88,9 @@
     "go_to_slide": "Go to slide {{ number }}",
     "pause": "Pause slideshow",
     "play": "Play slideshow"
+  },
+  "category_showcase": {
+    "open_category": "Explore category",
+    "image_hint": "Choose category photography in this block."
   }
 }
