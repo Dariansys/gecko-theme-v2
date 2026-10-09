@@ -1,0 +1,51 @@
+{% comment %}Native product data only; no cart action or product-page changes.{% endcomment %}
+{% liquid
+  assign image = product.featured_image
+  assign image_alt = image.alt | default: product.title
+  assign accent = accent_index | modulo: 4
+  assign on_sale = false
+  if product.price_varies == false and product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+%}
+<a class="gecko-product-card" href="{{ product.url | escape }}" data-accent="{{ accent }}">
+  <div class="gecko-product-card__media">
+    {% if image != blank %}
+      {{ image | image_url: width: 1400 | image_tag:
+        class: 'gecko-product-card__image',
+        widths: '300, 400, 600, 800, 1000, 1200, 1400',
+        sizes: '(min-width: 1920px) 380px, (min-width: 1024px) 23vw, (min-width: 600px) 46vw, calc(100vw - 2rem)',
+        loading: 'lazy', fetchpriority: 'low', alt: image_alt
+      }}
+    {% endif %}
+    {% if show_badge %}
+      {% if product.available == false %}
+        <span class="gecko-product-card__badge gecko-label">{{ 'featured_products.sold_out' | t }}</span>
+      {% elsif on_sale %}
+        <span class="gecko-product-card__badge gecko-label">{{ 'featured_products.sale' | t }}</span>
+      {% endif %}
+    {% endif %}
+  </div>
+  <div class="gecko-product-card__copy">
+    <div>
+      {% if show_vendor and product.vendor != blank %}<p class="gecko-product-card__vendor gecko-label">{{ product.vendor | escape }}</p>{% endif %}
+      <h3 class="gecko-product-card__title">{{ product.title | escape }}</h3>
+      {% if show_price %}
+        <p class="gecko-product-card__price">
+          {% if on_sale %}<span class="gecko-visually-hidden">{{ 'featured_products.sale_price' | t }}</span>{% endif %}
+          {% if product.price_varies %}
+            {% assign minimum_price = product.price_min | money_with_currency %}
+            <span>{{ 'featured_products.from_price' | t: price: minimum_price }}</span>
+          {% else %}
+            <span>{{ product.price | money_with_currency }}</span>
+          {% endif %}
+          {% if on_sale %}
+            <span class="gecko-visually-hidden">{{ 'featured_products.regular_price' | t }}</span>
+            <s>{{ product.compare_at_price | money_with_currency }}</s>
+          {% endif %}
+        </p>
+      {% endif %}
+    </div>
+    <span class="gecko-product-card__arrow" aria-hidden="true">→</span>
+  </div>
+</a>

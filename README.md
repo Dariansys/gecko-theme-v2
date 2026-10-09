@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 04A homepage category showcase
+- Status: Under Development — Phase 04B homepage featured products
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -122,6 +122,16 @@ initial cards. Upload category photography and select category links in the loca
 Theme Editor. Cards stack on mobile and form two columns from 768px; Warm/Cool/None
 accents and crop/contain presentation are configurable. The Hero and Header are
 preserved. Stop after this section until further work is explicitly authorized.
+
+## Phase 04B featured products
+
+[docs/featured-products.md](docs/featured-products.md) covers the collection-backed
+section after the category showcase. Choose a collection locally in Theme Editor;
+four products are shown by default with native product links and pricing. Vendor,
+price and availability/sale badges are optional. No collection is selected
+automatically; empty selections stay hidden on the storefront. The approved
+Header, Hero and category showcase remain intact. Stop after this section until
+further work is explicitly authorized.
 
 ## Folder structure
 

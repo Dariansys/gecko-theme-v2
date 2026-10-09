@@ -168,5 +168,20 @@
     "defaults": {
       "heading": "Explore the collection"
     }
+  },
+  "featured_products": {
+    "name": "Featured products",
+    "eyebrow": "Eyebrow",
+    "heading": "Heading",
+    "description": "Short description",
+    "collection": "Collection",
+    "collection_info": "Select a curated collection. Product order follows that collection; an empty selection is hidden on the storefront.",
+    "product_limit": "Products to show",
+    "show_price": "Show price",
+    "show_vendor": "Show vendor",
+    "show_badge": "Show sale / sold-out badge",
+    "defaults": {
+      "heading": "SELECTED PIECES"
+    }
   }
 }

@@ -1,0 +1,42 @@
+{% assign selected_collection = section.settings.collection %}
+{% if selected_collection.products_count > 0 or request.design_mode %}
+  {{ 'gecko-featured-products.css' | asset_url | stylesheet_tag }}
+  <section class="gecko-featured surface-light gecko-section-space" {% if section.settings.heading != blank %}aria-labelledby="GeckoFeaturedTitle-{{ section.id }}"{% endif %}>
+    <div class="gecko-container gecko-container--wide">
+      <div class="gecko-featured__header">
+        {% if section.settings.eyebrow != blank %}<p class="gecko-label">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+        {% if section.settings.heading != blank %}<h2 id="GeckoFeaturedTitle-{{ section.id }}" class="gecko-featured__heading">{{ section.settings.heading | escape }}</h2>{% endif %}
+        {% if section.settings.description != blank %}<p class="gecko-featured__intro gecko-body-large">{{ section.settings.description | escape | newline_to_br }}</p>{% endif %}
+      </div>
+      {% if selected_collection.products_count > 0 %}
+        <ul class="gecko-featured__grid" role="list">
+          {% for product in selected_collection.products limit: section.settings.product_limit %}
+            <li>
+              {% render 'gecko-product-card', product: product, show_price: section.settings.show_price, show_vendor: section.settings.show_vendor, show_badge: section.settings.show_badge, accent_index: forloop.index0 %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% elsif request.design_mode %}
+        <p class="gecko-featured__editor-hint">{{ 'featured_products.collection_hint' | t }}</p>
+      {% endif %}
+    </div>
+  </section>
+{% endif %}
+{% schema %}
+{
+  "name": "t:featured_products.name",
+  "class": "gecko-featured-products-section",
+  "enabled_on": { "templates": ["index"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "t:featured_products.eyebrow" },
+    { "type": "text", "id": "heading", "label": "t:featured_products.heading", "default": "t:featured_products.defaults.heading" },
+    { "type": "textarea", "id": "description", "label": "t:featured_products.description" },
+    { "type": "collection", "id": "collection", "label": "t:featured_products.collection", "info": "t:featured_products.collection_info" },
+    { "type": "range", "id": "product_limit", "label": "t:featured_products.product_limit", "min": 1, "max": 8, "step": 1, "default": 4 },
+    { "type": "checkbox", "id": "show_price", "label": "t:featured_products.show_price", "default": true },
+    { "type": "checkbox", "id": "show_vendor", "label": "t:featured_products.show_vendor", "default": false },
+    { "type": "checkbox", "id": "show_badge", "label": "t:featured_products.show_badge", "default": true }
+  ],
+  "presets": [{ "name": "t:featured_products.name" }]
+}
+{% endschema %}

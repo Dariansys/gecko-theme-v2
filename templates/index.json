@@ -132,10 +132,21 @@
         "heading": "Explore the collection",
         "description": ""
       }
+    },
+    "featured_products": {
+      "type": "gecko-featured-products",
+      "settings": {
+        "heading": "SELECTED PIECES",
+        "product_limit": 4,
+        "show_price": true,
+        "show_vendor": false,
+        "show_badge": true
+      }
     }
   },
   "order": [
     "main",
-    "category_showcase"
+    "category_showcase",
+    "featured_products"
   ]
 }

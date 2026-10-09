@@ -92,5 +92,13 @@
   "category_showcase": {
     "open_category": "Explore category",
     "image_hint": "Choose category photography in this block."
+  },
+  "featured_products": {
+    "collection_hint": "Select a collection with storefront products to show your curated selection.",
+    "sold_out": "Sold out",
+    "sale": "Sale",
+    "sale_price": "Sale price",
+    "regular_price": "Regular price",
+    "from_price": "From {{ price }}"
   }
 }
