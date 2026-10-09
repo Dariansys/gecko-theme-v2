@@ -136,7 +136,10 @@
     "featured_products": {
       "type": "gecko-featured-products",
       "settings": {
+        "eyebrow": "",
         "heading": "SELECTED PIECES",
+        "description": "",
+        "collection": "mono-balisong",
         "product_limit": 4,
         "show_price": true,
         "show_vendor": false,
