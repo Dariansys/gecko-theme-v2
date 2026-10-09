@@ -84,13 +84,12 @@
         "primary_link": "",
         "secondary_label": "",
         "secondary_link": "",
-        "hero_image": "shopify://shop_images/photos-pulse7.jpg",
         "image_alt": "Pulse / Blasted",
         "show_gradient": true,
-        "gradient_intensity": "standard",
+        "gradient_intensity": "subtle",
         "autoplay": true,
-        "autoplay_interval": "4",
-        "show_arrows": true,
+        "autoplay_interval": "5",
+        "show_arrows": false,
         "show_pagination": true,
         "show_counter": true
       }
