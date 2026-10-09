@@ -102,7 +102,7 @@ if (!customElements.get('gecko-hero-slideshow')) {
       const counter = this.querySelector('[data-hero-counter]');
       if (counter) counter.textContent = `${String(this.index + 1).padStart(2, '0')} / ${String(this.slides.length).padStart(2, '0')}`;
       // Automatic advancement stays silent; manual controls announce the position.
-      if (manual) this.querySelector('[data-hero-status]').textContent = this.dataset.statusTemplate.replace('{current}', this.index + 1);
+      if (manual) this.querySelector('[data-hero-status]').textContent = this.dataset.statusTemplate.replace('__GECKO_CURRENT__', this.index + 1);
       this.schedule();
     }
 

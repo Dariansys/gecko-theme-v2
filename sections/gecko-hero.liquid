@@ -75,7 +75,7 @@
       data-section-id="{{ section.id }}"
       data-autoplay="{{ section.settings.autoplay }}"
       data-interval="{{ section.settings.autoplay_interval }}"
-      data-status-template="{{ 'hero.slide_status' | t: current: '{current}', total: slide_count | escape }}"
+      data-status-template="{{ 'hero.slide_status' | t: current: '__GECKO_CURRENT__', total: slide_count | escape }}"
     >
       <div id="GeckoHeroSlides-{{ section.id }}" class="gecko-hero__slides">
         {% assign slide_index = 0 %}
