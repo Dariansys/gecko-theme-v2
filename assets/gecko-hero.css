@@ -69,6 +69,18 @@
   margin-block-start: var(--space-8);
 }
 .gecko-hero__actions .gecko-button { width: 100%; }
+.gecko-hero__actions .gecko-button--primary {
+  background-color: var(--gecko-orange);
+  color: var(--gecko-white);
+}
+.gecko-hero__actions .gecko-button--primary:focus-visible {
+  background-color: var(--gecko-red);
+}
+@media (hover: hover) {
+  .gecko-hero__actions .gecko-button--primary:hover:not([aria-disabled='true']) {
+    background-color: var(--gecko-red);
+  }
+}
 .gecko-hero__media {
   display: block;
   position: relative;
