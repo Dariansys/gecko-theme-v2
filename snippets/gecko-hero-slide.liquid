@@ -1,0 +1,42 @@
+{% liquid
+  assign image = block.settings.image | default: legacy_settings.hero_image
+  assign mobile_image = block.settings.mobile_image | default: legacy_settings.mobile_image
+  assign image = image | default: mobile_image
+  assign image_alt = block.settings.alt | default: legacy_settings.image_alt
+  assign fit = block.settings.image_fit | default: 'cover'
+  assign slide_id = block.id | default: 'fallback'
+  assign first = false
+  if index == 1
+    assign first = true
+  endif
+%}
+<div
+  id="GeckoHeroSlide-{{ section_id }}-{{ slide_id }}"
+  class="gecko-hero__slide{% if first %} is-active{% endif %}"
+  data-hero-slide
+  data-block-id="{{ block.id }}"
+  data-image-fit="{{ fit }}"
+  role="group"
+  aria-roledescription="{{ 'hero.slide' | t }}"
+  aria-label="{{ 'hero.slide_status' | t: current: index, total: total }}"
+  {% unless first %}aria-hidden="true" inert{% endunless %}
+  {{ block.shopify_attributes }}
+>
+  {% if image != blank %}
+    {% if first %}
+      {% render 'gecko-hero-image', image: image, mobile_image: mobile_image, image_alt: image_alt, first: first %}
+    {% else %}
+      <template data-hero-image>
+        {% render 'gecko-hero-image', image: image, mobile_image: mobile_image, image_alt: image_alt, first: first %}
+      </template>
+    {% endif %}
+  {% elsif request.design_mode %}
+    <p class="gecko-hero__image-hint">{{ 'hero.image_hint' | t }}</p>
+  {% endif %}
+  {% if block.settings.label != blank or block.settings.caption != blank %}
+    <div class="gecko-hero__caption">
+      {% if block.settings.label != blank %}<p class="gecko-hero__slide-label">{{ block.settings.label | escape }}</p>{% endif %}
+      {% if block.settings.caption != blank %}<p class="gecko-hero__slide-caption">{{ block.settings.caption | escape }}</p>{% endif %}
+    </div>
+  {% endif %}
+</div>

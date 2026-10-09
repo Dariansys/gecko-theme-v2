@@ -1,5 +1,8 @@
 # Phase 03D-2 — Refined static homepage hero
 
+This records the earlier static design. Phase 03D-4 extends it with the gradient
+headline and slide blocks; see [hero-slideshow.md](hero-slideshow.md) for current behavior.
+
 `sections/gecko-hero.liquid` replaces the homepage's Skeleton welcome instance.
 The inherited `hello-world` source stays intact; no other homepage sections are
 added and the approved desktop/mobile Header is unchanged. `assets/gecko-hero.css`

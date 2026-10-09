@@ -1,4 +1,5 @@
 {{ 'gecko-hero.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'gecko-hero.js' | asset_url }}" defer></script>
 {% liquid
   assign headline = section.settings.headline | strip
   assign headline_accent = section.settings.headline_accent | strip
@@ -16,7 +17,15 @@
     endcapture
   endif
   assign hero_image = section.settings.hero_image | default: section.settings.mobile_image
-  assign image_alt = section.settings.image_alt | default: hero_image.alt
+  assign slide_count = 0
+  for block in section.blocks
+    if block.settings.image != blank or block.settings.mobile_image != blank or request.design_mode
+      assign slide_count = slide_count | plus: 1
+    endif
+  endfor
+  if slide_count == 0 and hero_image != blank
+    assign slide_count = 1
+  endif
   assign primary_url = section.settings.primary_link | default: routes.all_products_collection_url
   assign has_actions = false
   if section.settings.primary_label != blank and primary_url != blank
@@ -58,37 +67,64 @@
         </div>
       {% endif %}
     </div>
-    <div class="gecko-hero__media">
-      {% if hero_image != blank %}
-        <picture class="gecko-hero__picture">
-          {% if section.settings.mobile_image != blank %}
-            <source
-              media="(max-width: 767px)"
-              srcset="{% assign mobile_widths = '400,600,800' | split: ',' %}{% for mobile_width in mobile_widths %}{% assign candidate_width = mobile_width | plus: 0 %}{% if candidate_width < section.settings.mobile_image.width %}{{ section.settings.mobile_image | image_url: width: candidate_width }} {{ candidate_width }}w, {% endif %}{% endfor %}{{ section.settings.mobile_image | image_url: width: 1200 }} {{ section.settings.mobile_image.width | at_most: 1200 }}w"
-              sizes="calc(100vw - 5rem)"
-              width="{{ section.settings.mobile_image.width }}"
-              height="{{ section.settings.mobile_image.height }}"
-            >
+    <gecko-hero-slideshow
+      class="gecko-hero__media"
+      role="region"
+      aria-roledescription="{{ 'hero.carousel' | t }}"
+      aria-label="{{ 'hero.slideshow' | t }}"
+      data-section-id="{{ section.id }}"
+      data-autoplay="{{ section.settings.autoplay }}"
+      data-interval="{{ section.settings.autoplay_interval }}"
+      data-status-template="{{ 'hero.slide_status' | t: current: '{current}', total: slide_count | escape }}"
+    >
+      <div id="GeckoHeroSlides-{{ section.id }}" class="gecko-hero__slides">
+        {% assign slide_index = 0 %}
+        {% for block in section.blocks %}
+          {% if block.settings.image != blank or block.settings.mobile_image != blank or request.design_mode %}
+            {% assign slide_index = slide_index | plus: 1 %}
+            {% render 'gecko-hero-slide', section_id: section.id, block: block, index: slide_index, total: slide_count %}
           {% endif %}
-          {{
-            hero_image
-            | image_url: width: 2400
-            | image_tag:
-              class: 'gecko-hero__image',
-              widths: '400, 600, 800, 1000, 1200, 1600, 2000, 2400',
-              sizes: '(min-width: 1920px) 800px, (min-width: 1024px) 48vw, (min-width: 768px) 80vw, calc(100vw - 5rem)',
-              loading: 'eager',
-              fetchpriority: 'high',
-              alt: image_alt
-          }}
-        </picture>
-      {% else %}
-        <div class="gecko-hero__empty" aria-hidden="true"></div>
-        {% if request.design_mode %}
-          <p class="gecko-hero__image-hint">{{ 'hero.image_hint' | t }}</p>
+        {% endfor %}
+        {% if slide_index == 0 and hero_image != blank %}
+          {% render 'gecko-hero-slide', section_id: section.id, legacy_settings: section.settings, index: 1, total: 1 %}
+        {% elsif slide_count == 0 %}
+          <div class="gecko-hero__empty" aria-hidden="true"></div>
+          {% if request.design_mode %}
+            <p class="gecko-hero__image-hint">{{ 'hero.image_hint' | t }}</p>
+          {% endif %}
         {% endif %}
+      </div>
+      {% if slide_count > 1 %}
+        {% if section.settings.show_counter %}
+          <span class="gecko-hero__counter" aria-hidden="true" data-hero-counter>01 / {% if slide_count < 10 %}0{% endif %}{{ slide_count }}</span>
+        {% endif %}
+        <div class="gecko-hero__controls" data-hero-controls hidden>
+          {% if section.settings.show_arrows %}
+            <div class="gecko-hero__arrows">
+              <button class="gecko-hero__control" type="button" data-hero-prev aria-label="{{ 'hero.previous' | t }}" aria-controls="GeckoHeroSlides-{{ section.id }}"><span aria-hidden="true">←</span></button>
+              <button class="gecko-hero__control" type="button" data-hero-next aria-label="{{ 'hero.next' | t }}" aria-controls="GeckoHeroSlides-{{ section.id }}"><span aria-hidden="true">→</span></button>
+            </div>
+          {% endif %}
+          <div class="gecko-hero__toolbar">
+            {% if section.settings.show_pagination %}
+              <div class="gecko-hero__pagination" aria-label="{{ 'hero.pagination' | t }}">
+                {% assign dot_index = 0 %}
+                {% for block in section.blocks %}
+                  {% if block.settings.image != blank or block.settings.mobile_image != blank or request.design_mode %}
+                    {% assign dot_index = dot_index | plus: 1 %}
+                    <button class="gecko-hero__dot" type="button" data-hero-dot="{{ dot_index | minus: 1 }}" aria-label="{{ 'hero.go_to_slide' | t: number: dot_index }}" aria-controls="GeckoHeroSlide-{{ section.id }}-{{ block.id }}" {% if dot_index == 1 %}aria-current="true"{% endif %}><span aria-hidden="true"></span></button>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+            {% if section.settings.autoplay %}
+              <button class="gecko-hero__control gecko-hero__play" type="button" data-hero-play aria-label="{{ 'hero.pause' | t }}" data-pause-label="{{ 'hero.pause' | t }}" data-play-label="{{ 'hero.play' | t }}"><span data-hero-play-icon aria-hidden="true">Ⅱ</span></button>
+            {% endif %}
+          </div>
+        </div>
+        <p class="gecko-visually-hidden" role="status" aria-live="polite" aria-atomic="true" data-hero-status></p>
       {% endif %}
-    </div>
+    </gecko-hero-slideshow>
   </div>
 </section>
 
@@ -96,25 +132,213 @@
 {
   "name": "t:hero.name",
   "class": "gecko-hero-section",
-  "enabled_on": { "templates": ["index"] },
+  "enabled_on": {
+    "templates": [
+      "index"
+    ]
+  },
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "t:hero.eyebrow", "default": "t:hero.defaults.eyebrow" },
-    { "type": "textarea", "id": "headline", "label": "t:hero.headline", "default": "t:hero.defaults.headline" },
-    { "type": "text", "id": "headline_accent", "label": "t:hero.headline_accent", "info": "t:hero.headline_accent_info", "default": "t:hero.defaults.headline_accent" },
-    { "type": "textarea", "id": "body", "label": "t:hero.body", "default": "t:hero.defaults.body" },
-    { "type": "text", "id": "primary_label", "label": "t:hero.primary_label", "default": "t:hero.defaults.primary_label" },
-    { "type": "url", "id": "primary_link", "label": "t:hero.primary_link", "info": "t:hero.primary_link_info" },
-    { "type": "text", "id": "secondary_label", "label": "t:hero.secondary_label" },
-    { "type": "url", "id": "secondary_link", "label": "t:hero.secondary_link" },
-    { "type": "image_picker", "id": "hero_image", "label": "t:hero.hero_image", "info": "t:hero.image_info" },
-    { "type": "image_picker", "id": "mobile_image", "label": "t:hero.mobile_image", "info": "t:hero.mobile_image_info" },
-    { "type": "text", "id": "image_alt", "label": "t:hero.image_alt", "info": "t:hero.image_alt_info" },
-    { "type": "checkbox", "id": "show_gradient", "label": "t:hero.show_gradient", "default": true },
-    { "type": "select", "id": "gradient_intensity", "label": "t:hero.gradient_intensity", "options": [
-      { "value": "subtle", "label": "t:hero.subtle" },
-      { "value": "standard", "label": "t:hero.standard" }
-    ], "default": "standard" }
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:hero.eyebrow",
+      "default": "t:hero.defaults.eyebrow"
+    },
+    {
+      "type": "textarea",
+      "id": "headline",
+      "label": "t:hero.headline",
+      "default": "t:hero.defaults.headline"
+    },
+    {
+      "type": "text",
+      "id": "headline_accent",
+      "label": "t:hero.headline_accent",
+      "info": "t:hero.headline_accent_info",
+      "default": "t:hero.defaults.headline_accent"
+    },
+    {
+      "type": "textarea",
+      "id": "body",
+      "label": "t:hero.body",
+      "default": "t:hero.defaults.body"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "t:hero.primary_label",
+      "default": "t:hero.defaults.primary_label"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "t:hero.primary_link",
+      "info": "t:hero.primary_link_info"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "t:hero.secondary_label"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "t:hero.secondary_link"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "t:hero.hero_image",
+      "info": "t:hero.image_info"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "t:hero.mobile_image",
+      "info": "t:hero.mobile_image_info"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "t:hero.image_alt",
+      "info": "t:hero.image_alt_info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_gradient",
+      "label": "t:hero.show_gradient",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "gradient_intensity",
+      "label": "t:hero.gradient_intensity",
+      "options": [
+        {
+          "value": "subtle",
+          "label": "t:hero.subtle"
+        },
+        {
+          "value": "standard",
+          "label": "t:hero.standard"
+        }
+      ],
+      "default": "standard"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "t:hero.autoplay",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "autoplay_interval",
+      "label": "t:hero.autoplay_interval",
+      "options": [
+        {
+          "value": "4",
+          "label": "t:hero.seconds_4"
+        },
+        {
+          "value": "5",
+          "label": "t:hero.seconds_5"
+        },
+        {
+          "value": "6",
+          "label": "t:hero.seconds_6"
+        },
+        {
+          "value": "8",
+          "label": "t:hero.seconds_8"
+        }
+      ],
+      "default": "5"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "t:hero.show_arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_pagination",
+      "label": "t:hero.show_pagination",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_counter",
+      "label": "t:hero.show_counter",
+      "default": true
+    }
   ],
-  "presets": [{ "name": "t:hero.name" }]
+  "presets": [
+    {
+      "name": "t:hero.name",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 5,
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "t:hero.slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:hero.desktop_image",
+          "info": "t:hero.slide_image_info"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "t:hero.mobile_image",
+          "info": "t:hero.mobile_image_info"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "t:hero.slide_label"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "t:hero.slide_caption"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "t:hero.image_alt",
+          "info": "t:hero.image_alt_info"
+        },
+        {
+          "type": "select",
+          "id": "image_fit",
+          "label": "t:hero.image_fit",
+          "options": [
+            {
+              "value": "cover",
+              "label": "t:hero.cover"
+            },
+            {
+              "value": "contain",
+              "label": "t:hero.contain"
+            }
+          ],
+          "default": "cover"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

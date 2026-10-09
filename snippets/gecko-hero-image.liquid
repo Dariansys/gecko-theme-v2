@@ -1,0 +1,36 @@
+{% comment %}Responsive campaign image shared by slide blocks and legacy fallback.{% endcomment %}
+{% liquid
+  assign image = image | default: mobile_image
+  assign image_alt = image_alt | default: image.alt
+  assign loading = 'lazy'
+  assign priority = 'low'
+  if first
+    assign loading = 'eager'
+    assign priority = 'high'
+  endif
+  assign focal_point = image.presentation.focal_point | default: '50% 50%'
+  assign mobile_focal_point = mobile_image.presentation.focal_point | default: focal_point
+%}
+<picture class="gecko-hero__picture" style="--hero-image-position: {{ focal_point | escape }}; --hero-mobile-position: {{ mobile_focal_point | escape }};">
+  {% if mobile_image != blank %}
+    <source
+      media="(max-width: 767px)"
+      srcset="{% assign mobile_widths = '400,600,800' | split: ',' %}{% for mobile_width in mobile_widths %}{% assign candidate_width = mobile_width | plus: 0 %}{% if candidate_width < mobile_image.width %}{{ mobile_image | image_url: width: candidate_width }} {{ candidate_width }}w, {% endif %}{% endfor %}{{ mobile_image | image_url: width: 1200 }} {{ mobile_image.width | at_most: 1200 }}w"
+      sizes="calc(100vw - 2rem)"
+      width="{{ mobile_image.width }}"
+      height="{{ mobile_image.height }}"
+    >
+  {% endif %}
+  {{
+    image
+    | image_url: width: 2200
+    | image_tag:
+      class: 'gecko-hero__image',
+      widths: '400, 600, 800, 1000, 1200, 1600, 2000, 2200',
+      sizes: '(min-width: 1920px) 1020px, (min-width: 1024px) 56vw, (min-width: 768px) 92vw, calc(100vw - 2rem)',
+      loading: loading,
+      fetchpriority: priority,
+      style: 'object-position: inherit;',
+      alt: image_alt
+  }}
+</picture>

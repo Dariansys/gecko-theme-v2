@@ -77,6 +77,16 @@
     "results_for_html": "{{ count }} results found for {{ terms }}"
   },
   "hero": {
-    "image_hint": "Choose a hero image in the section settings."
+    "image_hint": "Add photography to a slide block, or choose a fallback hero image.",
+    "carousel": "carousel",
+    "slide": "slide",
+    "slideshow": "Gecko product highlights",
+    "slide_status": "Slide {{ current }} of {{ total }}",
+    "previous": "Previous slide",
+    "next": "Next slide",
+    "pagination": "Choose a slide",
+    "go_to_slide": "Go to slide {{ number }}",
+    "pause": "Pause slideshow",
+    "play": "Play slideshow"
   }
 }
