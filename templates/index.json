@@ -11,12 +11,88 @@
   "sections": {
     "main": {
       "type": "gecko-hero",
+      "blocks": {
+        "slide_Ki98xe": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/DSC_8469_18ffb72d-6104-439e-8941-c0c055d6c970.jpg",
+            "mobile_image": "shopify://shop_images/photos-pulse8.jpg",
+            "label": "",
+            "caption": "",
+            "alt": "",
+            "image_fit": "cover"
+          }
+        },
+        "slide_q8mMrP": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/DSC_8458.jpg",
+            "mobile_image": "shopify://shop_images/photos-pulse12.jpg",
+            "label": "",
+            "caption": "",
+            "alt": "",
+            "image_fit": "cover"
+          }
+        },
+        "slide_MLz7DX": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/DSC_8444.jpg",
+            "mobile_image": "shopify://shop_images/DSC00353.jpg",
+            "label": "",
+            "caption": "",
+            "alt": "",
+            "image_fit": "cover"
+          }
+        },
+        "slide_7ai3JJ": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/photos-pulse7.jpg",
+            "mobile_image": "shopify://shop_images/Weixin_Image_20261008205040_73_18.jpg",
+            "label": "",
+            "caption": "",
+            "alt": "",
+            "image_fit": "cover"
+          }
+        },
+        "slide_QRBXam": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Weixin_Image_20261008205040_72_18.jpg",
+            "mobile_image": "shopify://shop_images/Weixin_Image_20261008205040_78_18.jpg",
+            "label": "",
+            "caption": "",
+            "alt": "",
+            "image_fit": "cover"
+          }
+        }
+      },
+      "block_order": [
+        "slide_Ki98xe",
+        "slide_q8mMrP",
+        "slide_MLz7DX",
+        "slide_7ai3JJ",
+        "slide_QRBXam"
+      ],
       "settings": {
         "eyebrow": "GECKO / EVERYDAY CARRY",
         "headline": "A little color.\nA lot of Gecko.",
         "headline_accent": "Gecko.",
         "body": "Precision-machined tools designed for everyday interaction.",
-        "primary_label": "Explore products"
+        "primary_label": "Explore products",
+        "primary_link": "",
+        "secondary_label": "",
+        "secondary_link": "",
+        "hero_image": "shopify://shop_images/photos-pulse7.jpg",
+        "image_alt": "Pulse / Blasted",
+        "show_gradient": true,
+        "gradient_intensity": "standard",
+        "autoplay": true,
+        "autoplay_interval": "4",
+        "show_arrows": true,
+        "show_pagination": true,
+        "show_counter": true
       }
     }
   },
