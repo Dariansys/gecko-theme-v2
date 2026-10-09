@@ -54,7 +54,7 @@ These rules apply to every file in this project.
 
 ## Scope and store protection
 
-Phase 03D-1 is the first static homepage hero only. Preserve the approved desktop/mobile Header. See docs/static-hero.md and the earlier design/header guides. Stop before subsequent work until explicitly instructed.
+Phase 03D-2 refines the existing static homepage hero composition and media styling only. Preserve all Hero settings and content architecture. Preserve the approved desktop/mobile Header. See docs/static-hero.md and the earlier design/header guides. Stop before subsequent work until explicitly instructed.
 Keep inherited Skeleton source components unchanged outside authorized work. Do not create a carousel, scroll animation, parallax, additional homepage sections, mega menu, footer, collection page, product page, cart drawer, search overlay or functional Shopify product cards in this phase.
 Use Codex Cloud for coding and static validation, GitHub for source control, and local Shopify CLI for preview and theme synchronization. Do not attempt Shopify authentication, theme pushes or publication from Codex Cloud. Commit and push work to dev/gecko-v2.
 Do not migrate old Gecko code, assets, layouts, CSS, or JavaScript.
