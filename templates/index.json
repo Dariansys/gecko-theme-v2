@@ -11,7 +11,13 @@
   "sections": {
     "main": {
       "type": "gecko-hero",
-      "settings": {}
+      "settings": {
+        "eyebrow": "GECKO / EVERYDAY CARRY",
+        "headline": "A little color.\nA lot of Gecko.",
+        "headline_accent": "Gecko",
+        "body": "Precision-machined tools designed for everyday interaction.",
+        "primary_label": "Explore products"
+      }
     }
   },
   "order": [

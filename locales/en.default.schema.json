@@ -120,7 +120,8 @@
     "standard": "Standard",
     "defaults": {
       "eyebrow": "GECKO / EVERYDAY CARRY",
-      "headline": "DESIGNED\nTO BE USED.",
+      "headline": "A little color.\nA lot of Gecko.",
+      "headline_accent": "Gecko",
       "body": "Precision-machined tools designed for everyday interaction.",
       "primary_label": "Explore products"
     }
