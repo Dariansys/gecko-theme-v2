@@ -210,7 +210,11 @@
     "name": "Gecko product",
     "show_vendor": "Show vendor",
     "show_dynamic_checkout": "Show dynamic checkout button",
-    "shipping_note": "Optional shipping note"
+    "shipping_note": "Optional shipping note",
+    "show_specifications": "Show product specifications",
+    "specifications_heading": "Specifications heading",
+    "default_specifications_heading": "Product specifications",
+    "specifications_open_by_default": "Specifications open by default"
   },
   "gecko_collection": {
     "products_per_page": "Products per page",

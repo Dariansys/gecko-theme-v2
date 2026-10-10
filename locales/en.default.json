@@ -130,7 +130,22 @@
     "quantity": "Quantity",
     "add": "Add to cart",
     "update_error": "Could not update this option. Your previous selection is restored. Please try again.",
-    "updating": "Updating product options…"
+    "updating": "Updating product options…",
+    "specifications": {
+      "heading": "Product specifications",
+      "spec_model": "Model",
+      "spec_series": "Series",
+      "spec_handle_material": "Handle material",
+      "spec_handle_construction": "Handle construction",
+      "spec_blade_material": "Blade material",
+      "spec_blade_edge": "Blade edge",
+      "spec_overall_length_open": "Overall length (open)",
+      "spec_closed_length": "Closed length",
+      "spec_blade_thickness": "Blade thickness",
+      "spec_handle_thickness": "Handle thickness",
+      "spec_weight": "Weight",
+      "spec_batch_finishes": "Current batch finishes"
+    }
   },
   "gecko_collection": {
     "product_count": {

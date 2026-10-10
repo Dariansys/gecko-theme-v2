@@ -1,0 +1,22 @@
+{% comment %}Product-owned text metafields. Keep the field order independent of populated values.{% endcomment %}
+{% assign specification_keys = 'spec_model,spec_series,spec_handle_material,spec_handle_construction,spec_blade_material,spec_blade_edge,spec_overall_length_open,spec_closed_length,spec_blade_thickness,spec_handle_thickness,spec_weight,spec_batch_finishes' | split: ',' %}
+{% capture specification_rows %}
+  {% for key in specification_keys %}
+    {% assign specification_value = product.metafields.custom[key].value | strip %}
+    {% if specification_value != blank %}
+      {% assign label_key = 'gecko_product.specifications.' | append: key %}
+      <div class="gecko-product__specification-row">
+        <dt>{{ label_key | t | escape }}</dt>
+        <dd>{{ specification_value | escape }}</dd>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endcapture %}
+{% assign specification_rows = specification_rows | strip %}
+{% if specification_rows != blank %}
+  {% assign default_heading = 'gecko_product.specifications.heading' | t %}
+  <details class="gecko-product__specifications"{% if open_by_default %} open{% endif %}>
+    <summary>{{ heading | default: default_heading | escape }}</summary>
+    <dl>{{ specification_rows }}</dl>
+  </details>
+{% endif %}

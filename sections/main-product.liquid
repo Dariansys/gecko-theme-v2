@@ -32,6 +32,9 @@
         {% if section.settings.show_dynamic_checkout and current_variant.available %}<div class="gecko-product__checkout">{{ form | payment_button }}</div>{% endif %}
       {% endform %}
       {% if product.description != blank %}<div class="gecko-product__description">{{ product.description }}</div>{% endif %}
+      {% if section.settings.show_specifications %}
+        {% render 'product-specifications', product: product, heading: section.settings.specifications_heading, open_by_default: section.settings.specifications_open_by_default %}
+      {% endif %}
       {% if section.settings.shipping_note != blank %}<p class="gecko-product__note">{{ section.settings.shipping_note | escape }}</p>{% endif %}
     </div>
   </div>
@@ -43,7 +46,10 @@
   "settings": [
     { "type": "checkbox", "id": "show_vendor", "label": "t:gecko_product.show_vendor", "default": false },
     { "type": "checkbox", "id": "show_dynamic_checkout", "label": "t:gecko_product.show_dynamic_checkout", "default": false },
-    { "type": "text", "id": "shipping_note", "label": "t:gecko_product.shipping_note" }
+    { "type": "text", "id": "shipping_note", "label": "t:gecko_product.shipping_note" },
+    { "type": "checkbox", "id": "show_specifications", "label": "t:gecko_product.show_specifications", "default": true },
+    { "type": "text", "id": "specifications_heading", "label": "t:gecko_product.specifications_heading", "default": "t:gecko_product.default_specifications_heading" },
+    { "type": "checkbox", "id": "specifications_open_by_default", "label": "t:gecko_product.specifications_open_by_default", "default": true }
   ],
   "enabled_on": { "templates": ["product"] }
 }
