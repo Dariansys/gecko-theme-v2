@@ -54,8 +54,8 @@ These rules apply to every file in this project.
 
 ## Scope and store protection
 
-Phase 05A adds the premium product page UI only. Preserve the approved Header, Footer, Hero, category showcase and featured products, including settings and behavior. See docs/product-page.md and the earlier component guides. Stop before subsequent work until explicitly instructed.
-Keep inherited Skeleton source components unchanged outside authorized work. Do not create collection redesigns, cart drawers, search overlays, brand story sections, complex animations or dedicated 3D experiences in this phase. Display existing Shopify product media using native support.
+Phase 05B redesigns the collection / Store page only. Preserve the approved Header, Footer, homepage sections and product page behavior. Reuse the approved product-card snippet and styles. See docs/collection-page.md and the earlier component guides. Stop before subsequent work until explicitly instructed.
+Keep inherited Skeleton source components unchanged outside authorized work. Do not add advanced filters, sorting controls, quick add, cart drawers, search overlays, heavy animation or dedicated 3D experiences in this phase.
 Use Codex Cloud for coding and static validation, GitHub for source control, and local Shopify CLI for preview and theme synchronization. Do not attempt Shopify authentication, theme pushes or publication from Codex Cloud. Commit and push work to dev/gecko-v2.
 Do not migrate old Gecko code, assets, layouts, CSS, or JavaScript.
 Never delete or modify products, variants, collections, inventory, customers, orders, payments, shipping settings, or domain settings as part of theme development.

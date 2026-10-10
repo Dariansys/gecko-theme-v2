@@ -1,47 +1,78 @@
-{% comment %}
-  This section is used in the collection template to render collection page
-  listing all products within a collection.
+{{ 'gecko-featured-products.css' | asset_url | stylesheet_tag }}
+{{ 'gecko-collection.css' | asset_url | stylesheet_tag }}
+<section class="gecko-collection surface-light full-width" aria-labelledby="GeckoCollectionTitle-{{ section.id }}">
+  <div class="gecko-container gecko-container--wide">
+    <header class="gecko-collection__header">
+      <h1 class="gecko-collection__title" id="GeckoCollectionTitle-{{ section.id }}">{{ collection.title | escape }}</h1>
+      {% if section.settings.show_description and collection.description != blank %}
+        <div class="gecko-collection__description">{{ collection.description }}</div>
+      {% endif %}
+      {% if section.settings.show_product_count %}
+        <p class="gecko-collection__count gecko-label">{{ 'gecko_collection.product_count' | t: count: collection.products_count }}</p>
+      {% endif %}
+    </header>
 
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/collection
-{% endcomment %}
+    {% paginate collection.products by section.settings.products_per_page %}
+      {% if collection.products.size > 0 %}
+        <ul class="gecko-collection__grid" role="list">
+          {% for product in collection.products %}
+            {% assign accent_index = paginate.current_offset | plus: forloop.index0 %}
+            <li>
+              {% render 'gecko-product-card', product: product, show_price: section.settings.show_price, show_vendor: section.settings.show_vendor, show_badge: section.settings.show_badge, accent_index: accent_index %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="gecko-collection__empty" role="status">{{ 'gecko_collection.empty' | t }}</p>
+      {% endif %}
 
-<h1>{{ collection.title }}</h1>
-
-<div class="collection-products">
-  {% paginate collection.products by 20 %}
-    {% for product in collection.products %}
-      <div class="collection-product">
-        {% if product.featured_image %}
-          {% render 'image',
-            class: 'collection-product__image',
-            image: product.featured_image,
-            url: product.url,
-            width: 400,
-            height: 400,
-            crop: 'center'
-          %}
-        {% endif %}
-        <div class="collection-product__content">
-          <p>{{ product.title | escape | link_to: product.url }}</p>
-          <p>{{ product.price | money }}</p>
-        </div>
-      </div>
-    {% endfor %}
-
-    {{ paginate | default_pagination }}
-  {% endpaginate %}
-</div>
-
-{% stylesheet %}
-  .collection-products {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-  }
-{% endstylesheet %}
+      {% if paginate.pages > 1 %}
+        <nav class="gecko-collection__pagination" aria-label="{{ 'gecko_collection.pagination' | t | escape }}">
+          <ul role="list">
+            <li>
+              {% if paginate.previous %}
+                <a class="gecko-collection__page-control" href="{{ paginate.previous.url | escape }}" rel="prev" aria-label="{{ 'gecko_collection.previous' | t | escape }}"><span aria-hidden="true">←</span></a>
+              {% else %}
+                <span class="gecko-collection__page-control" aria-disabled="true"><span aria-hidden="true">←</span><span class="gecko-visually-hidden">{{ 'gecko_collection.previous' | t }}</span></span>
+              {% endif %}
+            </li>
+            {% for part in paginate.parts %}
+              {% assign page_number = part.title | plus: 0 %}
+              <li>
+                {% if part.is_link %}
+                  <a class="gecko-collection__page-control" href="{{ part.url | escape }}" aria-label="{{ 'gecko_collection.page' | t: number: part.title | escape }}">{{ part.title }}</a>
+                {% elsif page_number == paginate.current_page %}
+                  <span class="gecko-collection__page-control is-current" aria-current="page" aria-label="{{ 'gecko_collection.page' | t: number: part.title | escape }}">{{ part.title }}</span>
+                {% else %}
+                  <span class="gecko-collection__page-gap" aria-hidden="true">{{ part.title }}</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+            <li>
+              {% if paginate.next %}
+                <a class="gecko-collection__page-control" href="{{ paginate.next.url | escape }}" rel="next" aria-label="{{ 'gecko_collection.next' | t | escape }}"><span aria-hidden="true">→</span></a>
+              {% else %}
+                <span class="gecko-collection__page-control" aria-disabled="true"><span aria-hidden="true">→</span><span class="gecko-visually-hidden">{{ 'gecko_collection.next' | t }}</span></span>
+              {% endif %}
+            </li>
+          </ul>
+        </nav>
+      {% endif %}
+    {% endpaginate %}
+  </div>
+</section>
 
 {% schema %}
 {
   "name": "t:general.collection",
-  "settings": []
+  "enabled_on": { "templates": ["collection"] },
+  "settings": [
+    { "type": "range", "id": "products_per_page", "label": "t:gecko_collection.products_per_page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "checkbox", "id": "show_description", "label": "t:gecko_collection.show_description", "default": true },
+    { "type": "checkbox", "id": "show_product_count", "label": "t:gecko_collection.show_product_count", "default": true },
+    { "type": "checkbox", "id": "show_vendor", "label": "t:featured_products.show_vendor", "default": false },
+    { "type": "checkbox", "id": "show_price", "label": "t:featured_products.show_price", "default": true },
+    { "type": "checkbox", "id": "show_badge", "label": "t:featured_products.show_badge", "default": true }
+  ]
 }
 {% endschema %}

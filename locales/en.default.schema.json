@@ -211,5 +211,10 @@
     "show_vendor": "Show vendor",
     "show_dynamic_checkout": "Show dynamic checkout button",
     "shipping_note": "Optional shipping note"
+  },
+  "gecko_collection": {
+    "products_per_page": "Products per page",
+    "show_description": "Show collection description",
+    "show_product_count": "Show product count"
   }
 }

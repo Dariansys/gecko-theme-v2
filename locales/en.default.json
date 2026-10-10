@@ -131,5 +131,16 @@
     "add": "Add to cart",
     "update_error": "Could not update this option. Your previous selection is restored. Please try again.",
     "updating": "Updating product options…"
+  },
+  "gecko_collection": {
+    "product_count": {
+      "one": "{{ count }} product",
+      "other": "{{ count }} products"
+    },
+    "empty": "No products in this collection yet.",
+    "pagination": "Collection pages",
+    "page": "Page {{ number }}",
+    "previous": "Previous page",
+    "next": "Next page"
   }
 }

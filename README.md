@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 05A product page UI
+- Status: Under Development — Phase 05B collection storefront
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -150,6 +150,15 @@ the native product form handles cart submission. Vendor, shipping note and dynam
 checkout are configurable. Validate real product/checkout behavior locally on the
 unpublished theme. Approved homepage, Header and Footer are preserved. Stop after
 this UI task until further work is authorized.
+
+## Phase 05B collection / Store page
+
+[docs/collection-page.md](docs/collection-page.md) covers the redesigned collection
+header, responsive grid and rounded native pagination. The approved Selected
+Pieces card snippet and styles are reused unchanged. Description, count, vendor,
+price, badges and page size are configurable. No filters, quick add or JavaScript
+are added. Validate real pagination locally on the unpublished theme. Approved
+homepage, Header, Footer and product behavior are preserved; stop after this task.
 
 ## Folder structure
 
