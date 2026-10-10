@@ -1,0 +1,28 @@
+<input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id disabled>
+{% comment %}Enhanced option values use Shopify section rendering; native variant select remains the no-JS fallback.{% endcomment %}
+{% unless product.has_only_default_variant %}
+  <div class="gecko-product__options" data-option-picker hidden>
+    {% for option in product.options_with_values %}
+      <fieldset class="gecko-product__option">
+        <legend>{{ option.name | escape }}</legend>
+        <div class="gecko-product__pills">
+          {% for value in option.values %}
+            {% assign option_variant = value.variant %}
+            <label class="gecko-product__pill{% unless option_variant.available %} is-unavailable{% endunless %}">
+              <input type="radio" name="gecko-option-{{ section_id }}-{{ option.position }}" value="{{ value.id }}" data-option-value data-option-position="{{ option.position }}" data-product-url="{{ value.product_url | escape }}" {% if value.selected %}checked{% endif %}>
+              <span>{{ value.name | escape }}{% unless option_variant.available %}<span class="gecko-visually-hidden"> — {{ 'gecko_product.option_unavailable' | t }}</span>{% endunless %}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </fieldset>
+    {% endfor %}
+  </div>
+{% endunless %}
+<div class="gecko-product__native-variants" data-native-variants>
+  <label for="GeckoVariant-{{ section_id }}">{{ 'gecko_product.variant' | t }}</label>
+  <select id="GeckoVariant-{{ section_id }}" name="id" data-native-variant-select>
+    {% for variant in product.variants %}
+      <option value="{{ variant.id }}"{% if variant.id == current_variant.id %} selected{% endif %}{% unless variant.available %} disabled{% endunless %}>{{ variant.title | escape }} — {{ variant.price | money_with_currency }}{% unless variant.available %} — {{ 'gecko_product.sold_out' | t }}{% endunless %}</option>
+    {% endfor %}
+  </select>
+</div>

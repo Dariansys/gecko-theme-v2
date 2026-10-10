@@ -113,5 +113,23 @@
     "youtube": "YouTube",
     "tiktok": "TikTok",
     "policies": "Store policies"
+  },
+  "gecko_product": {
+    "gallery": "Product media",
+    "slide": "Slide",
+    "media_position": "{{ current }} / {{ total }}",
+    "previous": "Previous media",
+    "next": "Next media",
+    "no_media": "Product images coming soon",
+    "price": "Price",
+    "regular_price": "Regular price",
+    "sold_out": "Sold out",
+    "unavailable": "Unavailable combination",
+    "option_unavailable": "Unavailable with the current options",
+    "variant": "Variant",
+    "quantity": "Quantity",
+    "add": "Add to cart",
+    "update_error": "Could not update this option. Your previous selection is restored. Please try again.",
+    "updating": "Updating product options…"
   }
 }

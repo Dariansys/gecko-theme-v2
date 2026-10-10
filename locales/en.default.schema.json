@@ -205,5 +205,11 @@
     "tiktok": "TikTok URL",
     "legal": "Legal",
     "policies": "Show store policy links"
+  },
+  "gecko_product": {
+    "name": "Gecko product",
+    "show_vendor": "Show vendor",
+    "show_dynamic_checkout": "Show dynamic checkout button",
+    "shipping_note": "Optional shipping note"
   }
 }

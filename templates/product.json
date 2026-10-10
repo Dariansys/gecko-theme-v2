@@ -10,8 +10,11 @@
 {
   "sections": {
     "main": {
-      "type": "product",
-      "settings": {}
+      "type": "main-product",
+      "settings": {
+        "show_vendor": false,
+        "show_dynamic_checkout": false
+      }
     }
   },
   "order": [

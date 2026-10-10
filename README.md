@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 04C storefront footer
+- Status: Under Development — Phase 05A product page UI
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -140,6 +140,16 @@ section group. Select Shop and Info menus and configure optional copy, newslette
 social URLs and policy links locally in Theme Editor. The existing brand assets
 are reused at a restrained scale. No JavaScript is added. Approved storefront
 sections are preserved; stop after this footer until further work is authorized.
+
+## Phase 05A product page
+
+[docs/product-page.md](docs/product-page.md) covers the new product template:
+a rounded contain-fit gallery with arrows, native media and Gecko option pills.
+Shopify resolves enhanced selections and returns current pricing/availability;
+the native product form handles cart submission. Vendor, shipping note and dynamic
+checkout are configurable. Validate real product/checkout behavior locally on the
+unpublished theme. Approved homepage, Header and Footer are preserved. Stop after
+this UI task until further work is authorized.
 
 ## Folder structure
 
