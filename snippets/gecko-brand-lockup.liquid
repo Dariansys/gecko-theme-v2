@@ -1,8 +1,10 @@
 {% comment %}
   Two independently editable Shopify images, presented as one home link.
+  Optional image_loading controls below-the-fold usage; defaults to eager.
   Pass the owning section's settings explicitly; no repository/CDN fallbacks.
 {% endcomment %}
 {% liquid
+  assign brand_image_loading = image_loading | default: 'eager'
   assign brand_text = brand_settings.brand_fallback_text | default: shop.name
   assign mark_width = brand_settings.brand_mark_width | default: 34
   assign wordmark_width = brand_settings.wordmark_width | default: 120
@@ -38,7 +40,7 @@
         class: 'gecko-brand-lockup__mark',
         widths: '48, 72, 96, 120, 180',
         sizes: mark_sizes,
-        loading: 'eager',
+        loading: brand_image_loading,
         alt: ''
     }}
   {% endif %}
@@ -50,7 +52,7 @@
         class: 'gecko-brand-lockup__wordmark',
         widths: '80, 120, 160, 240, 320, 480, 600',
         sizes: wordmark_sizes,
-        loading: 'eager',
+        loading: brand_image_loading,
         alt: ''
     }}
   {% else %}

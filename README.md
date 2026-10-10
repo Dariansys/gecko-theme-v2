@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 04B homepage featured products
+- Status: Under Development — Phase 04C storefront footer
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -132,6 +132,14 @@ price and availability/sale badges are optional. No collection is selected
 automatically; empty selections stay hidden on the storefront. The approved
 Header, Hero and category showcase remain intact. Stop after this section until
 further work is explicitly authorized.
+
+## Phase 04C footer
+
+[docs/footer.md](docs/footer.md) covers the native footer section in the footer
+section group. Select Shop and Info menus and configure optional copy, newsletter,
+social URLs and policy links locally in Theme Editor. The existing brand assets
+are reused at a restrained scale. No JavaScript is added. Approved storefront
+sections are preserved; stop after this footer until further work is authorized.
 
 ## Folder structure
 

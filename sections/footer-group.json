@@ -12,10 +12,17 @@
   "name": "t:general.footer",
   "sections": {
     "footer": {
-      "type": "footer",
+      "type": "gecko-footer",
       "settings": {
-        "menu": "",
-        "show_payment_icons": true
+        "brand_mark": "shopify://shop_images/logo.jpg",
+        "wordmark": "shopify://shop_images/wordmark.png",
+        "brand_fallback_text": "Gecko EDC",
+        "shop_menu": "",
+        "info_menu": "",
+        "show_newsletter": true,
+        "newsletter_heading": "Newsletter",
+        "newsletter_button_label": "Join",
+        "show_policies": true
       }
     }
   },

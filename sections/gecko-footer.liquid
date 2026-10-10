@@ -1,0 +1,165 @@
+{{ 'gecko-footer.css' | asset_url | stylesheet_tag }}
+{% liquid
+  assign has_social = false
+  if section.settings.instagram_url != blank or section.settings.youtube_url != blank or section.settings.tiktok_url != blank
+    assign has_social = true
+  endif
+  assign email_id = 'GeckoFooterEmail-' | append: section.id
+  assign form_id = 'GeckoFooterNewsletter-' | append: section.id
+  assign message_id = 'GeckoFooterMessage-' | append: section.id
+  assign default_button_label = 'gecko_footer.join' | t
+  assign button_label = section.settings.newsletter_button_label | default: default_button_label
+  assign footer_brand = section.settings.brand_fallback_text | default: shop.name
+%}
+<footer class="gecko-footer full-width">
+  <div class="gecko-footer__inner">
+    <div class="gecko-footer__columns">
+      <div class="gecko-footer__brand">
+        {% render 'gecko-brand-lockup', brand_settings: section.settings, image_loading: 'lazy' %}
+        {% if section.settings.tagline != blank %}
+          <p class="gecko-footer__tagline">{{ section.settings.tagline | escape }}</p>
+        {% endif %}
+        {% if section.settings.brand_statement != blank %}
+          <p class="gecko-footer__statement">{{ section.settings.brand_statement | escape | newline_to_br }}</p>
+        {% endif %}
+      </div>
+
+      {% for column in (1..2) %}
+        {% liquid
+          if column == 1
+            assign menu = section.settings.shop_menu
+            assign menu_heading = 'gecko_footer.shop' | t
+          else
+            assign menu = section.settings.info_menu
+            assign menu_heading = 'gecko_footer.info' | t
+          endif
+        %}
+        {% if menu.links != blank %}
+          <nav class="gecko-footer__nav" aria-labelledby="GeckoFooterNav-{{ section.id }}-{{ column }}">
+            <h2 class="gecko-footer__label" id="GeckoFooterNav-{{ section.id }}-{{ column }}">{{ menu_heading | escape }}</h2>
+            <ul class="gecko-footer__links" role="list">
+              {% for link in menu.links %}
+                <li>
+                  <a href="{{ link.url | escape }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+                  {% if link.links != blank %}
+                    <ul class="gecko-footer__sub-links" role="list">
+                      {% for child_link in link.links %}
+                        <li>
+                          <a href="{{ child_link.url | escape }}"{% if child_link.current %} aria-current="page"{% endif %}>{{ child_link.title | escape }}</a>
+                          {% if child_link.links != blank %}
+                            <ul class="gecko-footer__sub-links" role="list">
+                              {% for grandchild_link in child_link.links %}
+                                <li><a href="{{ grandchild_link.url | escape }}"{% if grandchild_link.current %} aria-current="page"{% endif %}>{{ grandchild_link.title | escape }}</a></li>
+                              {% endfor %}
+                            </ul>
+                          {% endif %}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endif %}
+      {% endfor %}
+
+      {% if section.settings.show_newsletter or has_social %}
+        <div class="gecko-footer__connect">
+          {% if section.settings.show_newsletter %}
+            <div class="gecko-footer__newsletter">
+              {% if section.settings.newsletter_heading != blank %}
+                <h2 class="gecko-footer__label">{{ section.settings.newsletter_heading | escape }}</h2>
+              {% endif %}
+              {% if section.settings.newsletter_text != blank %}
+                <p class="gecko-footer__statement">{{ section.settings.newsletter_text | escape | newline_to_br }}</p>
+              {% endif %}
+              {% form 'customer', id: form_id, class: 'gecko-footer__form' %}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <label class="gecko-footer__email-label" for="{{ email_id }}">{{ 'gecko_footer.email_label' | t }}</label>
+                <div class="gecko-footer__form-row">
+                  <input
+                    id="{{ email_id }}"
+                    type="email"
+                    name="contact[email]"
+                    value="{{ form.email | escape }}"
+                    placeholder="{{ 'gecko_footer.email_placeholder' | t | escape }}"
+                    autocomplete="email"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    required
+                    {% if form.errors %}aria-invalid="true" aria-describedby="{{ message_id }}"{% elsif form.posted_successfully? %}aria-describedby="{{ message_id }}"{% endif %}
+                  >
+                  <button type="submit" class="gecko-footer__submit">{{ button_label | escape }}</button>
+                </div>
+                {% if form.errors %}
+                  <div id="{{ message_id }}" class="gecko-footer__message" role="alert">{{ form.errors | default_errors }}</div>
+                {% elsif form.posted_successfully? %}
+                  <p id="{{ message_id }}" class="gecko-footer__message" role="status">{{ 'gecko_footer.success' | t }}</p>
+                {% endif %}
+              {% endform %}
+            </div>
+          {% endif %}
+          {% if has_social %}
+            <nav class="gecko-footer__social" aria-labelledby="GeckoFooterSocial-{{ section.id }}">
+              <h2 class="gecko-footer__label" id="GeckoFooterSocial-{{ section.id }}">{{ 'gecko_footer.follow' | t }}</h2>
+              <ul class="gecko-footer__links gecko-footer__social-links" role="list">
+                {% if section.settings.instagram_url != blank %}<li><a href="{{ section.settings.instagram_url | escape }}">{{ 'gecko_footer.instagram' | t }}</a></li>{% endif %}
+                {% if section.settings.youtube_url != blank %}<li><a href="{{ section.settings.youtube_url | escape }}">{{ 'gecko_footer.youtube' | t }}</a></li>{% endif %}
+                {% if section.settings.tiktok_url != blank %}<li><a href="{{ section.settings.tiktok_url | escape }}">{{ 'gecko_footer.tiktok' | t }}</a></li>{% endif %}
+              </ul>
+            </nav>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+    <div class="gecko-footer__bottom">
+      <p class="gecko-footer__copyright">&copy; {{ 'now' | date: '%Y' }} {{ footer_brand | escape }}</p>
+      {% if section.settings.show_policies %}
+        {% capture policy_links %}
+          {% for policy in shop.policies %}
+            {% if policy.url != blank %}<li><a href="{{ policy.url | escape }}">{{ policy.title | escape }}</a></li>{% endif %}
+          {% endfor %}
+        {% endcapture %}
+        {% assign policy_links = policy_links | strip %}
+        {% if policy_links != blank %}
+          <nav aria-label="{{ 'gecko_footer.policies' | t | escape }}">
+            <ul class="gecko-footer__links gecko-footer__policy-links" role="list">{{ policy_links }}</ul>
+          </nav>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "t:gecko_footer.name",
+  "tag": "div",
+  "enabled_on": { "groups": ["footer"] },
+  "limit": 1,
+  "settings": [
+    { "type": "header", "content": "t:gecko_footer.brand" },
+    { "type": "image_picker", "id": "brand_mark", "label": "t:labels.brand_mark" },
+    { "type": "image_picker", "id": "wordmark", "label": "t:labels.wordmark" },
+    { "type": "text", "id": "brand_fallback_text", "label": "t:labels.brand_fallback_text", "default": "Gecko EDC" },
+    { "type": "text", "id": "tagline", "label": "t:gecko_footer.tagline" },
+    { "type": "textarea", "id": "brand_statement", "label": "t:gecko_footer.statement" },
+    { "type": "header", "content": "t:gecko_footer.navigation" },
+    { "type": "link_list", "id": "shop_menu", "label": "t:gecko_footer.shop_menu" },
+    { "type": "link_list", "id": "info_menu", "label": "t:gecko_footer.info_menu" },
+    { "type": "header", "content": "t:gecko_footer.newsletter" },
+    { "type": "checkbox", "id": "show_newsletter", "label": "t:gecko_footer.show_newsletter", "default": true },
+    { "type": "text", "id": "newsletter_heading", "label": "t:gecko_footer.heading", "default": "t:gecko_footer.default_heading" },
+    { "type": "textarea", "id": "newsletter_text", "label": "t:gecko_footer.text" },
+    { "type": "text", "id": "newsletter_button_label", "label": "t:gecko_footer.button", "default": "t:gecko_footer.default_button" },
+    { "type": "header", "content": "t:gecko_footer.social" },
+    { "type": "url", "id": "instagram_url", "label": "t:gecko_footer.instagram" },
+    { "type": "url", "id": "youtube_url", "label": "t:gecko_footer.youtube" },
+    { "type": "url", "id": "tiktok_url", "label": "t:gecko_footer.tiktok" },
+    { "type": "header", "content": "t:gecko_footer.legal" },
+    { "type": "checkbox", "id": "show_policies", "label": "t:gecko_footer.policies", "default": true }
+  ],
+  "presets": [{ "name": "t:gecko_footer.name" }]
+}
+{% endschema %}

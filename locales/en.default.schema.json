@@ -183,5 +183,27 @@
     "defaults": {
       "heading": "SELECTED PIECES"
     }
+  },
+  "gecko_footer": {
+    "name": "Gecko footer",
+    "brand": "Brand",
+    "tagline": "Footer tagline",
+    "statement": "Brand statement",
+    "navigation": "Navigation",
+    "shop_menu": "Shop menu",
+    "info_menu": "Info menu",
+    "newsletter": "Newsletter",
+    "show_newsletter": "Show newsletter",
+    "heading": "Newsletter heading",
+    "text": "Newsletter text",
+    "button": "Newsletter button label",
+    "default_heading": "Newsletter",
+    "default_button": "Join",
+    "social": "Social links",
+    "instagram": "Instagram URL",
+    "youtube": "YouTube URL",
+    "tiktok": "TikTok URL",
+    "legal": "Legal",
+    "policies": "Show store policy links"
   }
 }
