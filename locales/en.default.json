@@ -142,5 +142,8 @@
     "page": "Page {{ number }}",
     "previous": "Previous page",
     "next": "Next page"
+  },
+  "product_media": {
+    "placeholder": "Photography coming soon"
   }
 }

@@ -7,7 +7,7 @@ Official Shopify storefront rebuild for Gecko EDC.
 - Base: Shopify Skeleton Theme
 - Development: Shopify CLI
 - Frontend: Liquid + CSS + Vanilla JavaScript
-- Status: Under Development — Phase 05B collection storefront
+- Status: Under Development — Phase 05C unified product media
 - Shopify store: yh5bqf-un.myshopify.com (local Shopify CLI development confirmed by the developer)
 
 ## Foundation and prerequisites
@@ -159,6 +159,14 @@ Pieces card snippet and styles are reused unchanged. Description, count, vendor,
 price, badges and page size are configurable. No filters, quick add or JavaScript
 are added. Validate real pagination locally on the unpublished theme. Approved
 homepage, Header, Footer and product behavior are preserved; stop after this task.
+
+## Phase 05C unified product media
+
+[docs/product-media.md](docs/product-media.md) supersedes earlier media dimensions:
+shared rounded neutral stages, tightly contained aspect-aware gallery media,
+square featured/catalog frames, and a shared photography placeholder. Product
+options/purchase behavior and page composition are preserved. Verify the final
+appearance against real photography locally; stop after this media refinement.
 
 ## Folder structure
 

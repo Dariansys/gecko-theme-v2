@@ -9,7 +9,7 @@
   endif
 %}
 <a class="gecko-product-card" href="{{ product.url | escape }}" data-accent="{{ accent }}">
-  <div class="gecko-product-card__media">
+  <div class="gecko-product-card__media gecko-product-media">
     {% if image != blank %}
       {{ image | image_url: width: 1400 | image_tag:
         class: 'gecko-product-card__image',
@@ -17,6 +17,8 @@
         sizes: '(min-width: 1920px) 380px, (min-width: 1024px) 23vw, (min-width: 600px) 46vw, calc(100vw - 2rem)',
         loading: 'lazy', fetchpriority: 'low', alt: image_alt
       }}
+    {% else %}
+      {% render 'product-media-placeholder' %}
     {% endif %}
     {% if show_badge %}
       {% if product.available == false %}

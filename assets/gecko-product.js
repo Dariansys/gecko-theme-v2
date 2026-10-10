@@ -29,7 +29,10 @@ if (!customElements.get('gecko-product')) {
         event.preventDefault();
         this.navigate(this.activeIndex + (event.key === 'ArrowRight' ? 1 : -1));
       }, { signal });
-      this.resizeObserver = new ResizeObserver(() => {
+      this.resizeObserver = new ResizeObserver(([entry]) => {
+        // Aspect changes affect height; only viewport-width changes should realign scrolling.
+        if (this.galleryWidth === entry.contentRect.width) return;
+        this.galleryWidth = entry.contentRect.width;
         if (this.track && this.slides[this.activeIndex]) {
           this.track.scrollTo({ left: this.slides[this.activeIndex].offsetLeft - this.slides[0].offsetLeft, behavior: 'instant' });
         }
@@ -94,6 +97,8 @@ if (!customElements.get('gecko-product')) {
           }
         }
       });
+      // Bound the active photo's stage in CSS; other media keep the same contained frame.
+      this.track.style.setProperty('--gecko-media-aspect', this.slides[index].dataset.mediaAspect || '1');
       this.activeIndex = index;
       const prev = this.querySelector('[data-media-prev]');
       const next = this.querySelector('[data-media-next]');
