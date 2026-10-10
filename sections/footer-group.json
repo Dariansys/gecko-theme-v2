@@ -19,7 +19,7 @@
         "brand_fallback_text": "Gecko EDC",
         "tagline": "",
         "brand_statement": "",
-        "shop_menu": "",
+        "shop_menu": "main-menu",
         "info_menu": "",
         "show_newsletter": true,
         "newsletter_heading": "Newsletter",
