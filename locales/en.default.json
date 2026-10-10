@@ -41,10 +41,29 @@
     "comment_form_title": "Add a comment"
   },
   "cart": {
-    "checkout": "Checkout",
-    "title": "Cart",
-    "update": "Update",
-    "remove": "Remove"
+    "checkout": "CHECKOUT",
+    "title": "YOUR CART",
+    "update": "Update cart",
+    "remove": "Remove",
+    "empty": "YOUR CART IS EMPTY.",
+    "explore": "EXPLORE PRODUCTS",
+    "item_count": {
+      "one": "{{ count }} item",
+      "other": "{{ count }} items"
+    },
+    "unit_price": "Unit price",
+    "line_total": "Line total",
+    "quantity_for": "Quantity for {{ title }}",
+    "decrease_for": "Decrease quantity for {{ title }}",
+    "increase_for": "Increase quantity for {{ title }}",
+    "remove_for": "Remove {{ title }}",
+    "unavailable": "This variant is currently unavailable. You can remove it or review availability at checkout.",
+    "summary": "Order summary",
+    "subtotal": "Subtotal",
+    "note": "Order note (optional)",
+    "taxes_shipping": "Taxes and shipping calculated at checkout.",
+    "taxes_included": "Taxes included. Shipping calculated at checkout.",
+    "pending_update": "Quantity or note changed. Select Update cart to refresh totals, or proceed to checkout."
   },
   "customers": {
     "login": {

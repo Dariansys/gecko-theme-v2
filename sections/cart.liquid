@@ -1,37 +1,94 @@
-{% comment %}
-  This section is used in the cart template to render /cart page with an
-  overview of the items in customer's cart.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/cart
-{% endcomment %}
-
-<h1>{{ 'cart.title' | t }}</h1>
-
-<form action="{{ routes.cart_url }}" method="post">
-  <table>
-    {% for item in cart.items %}
-      <tr>
-        <td>
-          {% render 'image', image: item.image, url: item.url %}
-        </td>
-        <td>
-          <p>{{ item.product.title }}</p>
-          {{ 'cart.remove' | t | link_to: item.url_to_remove }}
-        </td>
-        <td>
-          <input type="text" name="updates[]" value="{{ item.quantity }}">
-          <input type="submit" value="{{ 'cart.update' | t }}">
-        </td>
-      </tr>
-    {% endfor %}
-  </table>
-
-  <input type="submit" name="checkout" value="{{ 'cart.checkout' | t }}">
-</form>
-
+{{ 'gecko-cart.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'gecko-cart.js' | asset_url }}" defer></script>
+<section class="gecko-cart surface-light gecko-section-space" aria-labelledby="CartTitle-{{ section.id }}">
+  <div class="gecko-container gecko-container--wide">
+    <header class="gecko-cart__header">
+      {% if section.settings.eyebrow != blank %}<p class="gecko-label">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+      <h1 id="CartTitle-{{ section.id }}">{{ 'cart.title' | t }}</h1>
+      <p class="gecko-cart__count">{{ 'cart.item_count' | t: count: cart.item_count }}</p>
+      <div class="gecko-gradient-line" aria-hidden="true"></div>
+    </header>
+    {% if cart.empty? %}
+      <div class="gecko-cart__empty">
+        <h2>{{ 'cart.empty' | t }}</h2>
+        <a class="gecko-button gecko-cart__primary" href="{{ routes.all_products_collection_url }}">{{ 'cart.explore' | t }} <span class="gecko-button__arrow" aria-hidden="true">→</span></a>
+      </div>
+    {% else %}
+      <form action="{{ routes.cart_url }}" method="post" class="gecko-cart__form" data-gecko-cart>
+        <div class="gecko-cart__items">
+          <ul class="gecko-cart__list" role="list">
+            {% for item in cart.items %}
+              {% assign item_index = forloop.index %}
+              <li class="gecko-cart__item">
+                <a class="gecko-cart__media gecko-product-media" href="{{ item.url }}" aria-label="{{ item.product.title | escape }}">
+                  {% if item.image %}
+                    {% assign image_alt = item.image.alt | default: item.product.title %}
+                    {{ item.image | image_url: width: 480 | image_tag: widths: '120, 180, 240, 360, 480', sizes: '(min-width: 768px) 160px, 104px', loading: 'lazy', alt: image_alt }}
+                  {% else %}
+                    {{ 'product-1' | placeholder_svg_tag: 'gecko-cart__placeholder' }}
+                  {% endif %}
+                </a>
+                <div class="gecko-cart__details">
+                  <h2><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h2>
+                  {% unless item.product.has_only_default_variant %}
+                    <dl class="gecko-cart__options">
+                      {% for option in item.options_with_values %}<div><dt>{{ option.name | escape }}:</dt> <dd>{{ option.value | escape }}</dd></div>{% endfor %}
+                    </dl>
+                  {% endunless %}
+                  {% if item.selling_plan_allocation %}<p class="gecko-cart__meta">{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>{% endif %}
+                  {% for property in item.properties %}
+                    {% assign first_character = property.first | slice: 0 %}
+                    {% if property.last != blank and first_character != '_' %}
+                      <p class="gecko-cart__meta">{{ property.first | escape }}:
+                        {% if property.last contains '/uploads/' %}<a href="{{ property.last | escape }}">{{ property.last | split: '/' | last | escape }}</a>{% else %}{{ property.last | escape }}{% endif %}
+                      </p>
+                    {% endif %}
+                  {% endfor %}
+                  {% unless item.variant.available %}<p class="gecko-cart__meta">{{ 'cart.unavailable' | t }}</p>{% endunless %}
+                  <p class="gecko-cart__unit-price">
+                    <span>{{ 'cart.unit_price' | t }}:</span>
+                    {% if item.original_price != item.final_price %}<s>{{ item.original_price | money_with_currency }}</s>{% endif %}
+                    {{ item.final_price | money_with_currency }}
+                  </p>
+                  {% if item.unit_price_measurement %}
+                    <p class="gecko-cart__meta">{{ item.unit_price | money }} / {% if item.unit_price_measurement.reference_value != 1 %}{{ item.unit_price_measurement.reference_value }}{% endif %}{{ item.unit_price_measurement.reference_unit | escape }}</p>
+                  {% endif %}
+                  {% for discount in item.line_level_discount_allocations %}<p class="gecko-cart__meta">{{ discount.discount_application.title | escape }} (−{{ discount.amount | money_with_currency }})</p>{% endfor %}
+                </div>
+                <div class="gecko-cart__controls">
+                  <label class="gecko-visually-hidden" for="CartQuantity-{{ section.id }}-{{ item_index }}">{{ 'cart.quantity_for' | t: title: item.product.title | escape }}</label>
+                  <div class="gecko-cart__quantity" data-cart-quantity>
+                    <button type="button" data-quantity-step="-1" aria-label="{{ 'cart.decrease_for' | t: title: item.product.title | escape }}" hidden>−</button>
+                    <input id="CartQuantity-{{ section.id }}-{{ item_index }}" type="number" name="updates[]" value="{{ item.quantity }}" min="{{ item.variant.quantity_rule.min | default: 1 }}" step="{{ item.variant.quantity_rule.increment | default: 1 }}" {% if item.variant.quantity_rule.max %}max="{{ item.variant.quantity_rule.max }}"{% endif %} inputmode="numeric">
+                    <button type="button" data-quantity-step="1" aria-label="{{ 'cart.increase_for' | t: title: item.product.title | escape }}" hidden>+</button>
+                  </div>
+                  <a class="gecko-cart__remove" href="{{ item.url_to_remove }}" aria-label="{{ 'cart.remove_for' | t: title: item.product.title | escape }}">{{ 'cart.remove' | t }}</a>
+                </div>
+                <p class="gecko-cart__line-total"><span>{{ 'cart.line_total' | t }}</span>{% if item.original_line_price != item.final_line_price %}<s>{{ item.original_line_price | money_with_currency }}</s>{% endif %}<strong>{{ item.final_line_price | money_with_currency }}</strong></p>
+              </li>
+            {% endfor %}
+          </ul>
+          <button type="submit" class="gecko-button gecko-cart__update" name="update">{{ 'cart.update' | t }}</button>
+          <p class="gecko-cart__status" role="status" data-cart-status data-message="{{ 'cart.pending_update' | t | escape }}"></p>
+        </div>
+        <aside class="gecko-cart__summary" aria-labelledby="CartSummary-{{ section.id }}">
+          <h2 id="CartSummary-{{ section.id }}">{{ 'cart.summary' | t }}</h2>
+          {% for discount in cart.cart_level_discount_applications %}<div class="gecko-cart__discount"><span>{{ discount.title | escape }}</span><span>−{{ discount.total_allocated_amount | money_with_currency }}</span></div>{% endfor %}
+          <div class="gecko-cart__subtotal"><span>{{ 'cart.subtotal' | t }}</span><strong>{{ cart.total_price | money_with_currency }}</strong></div>
+          {% if section.settings.show_note %}<label class="gecko-cart__note-label" for="CartNote-{{ section.id }}">{{ 'cart.note' | t }}</label><textarea id="CartNote-{{ section.id }}" name="note" rows="3">{{ cart.note | escape }}</textarea>{% endif %}
+          <p class="gecko-cart__meta">{% if cart.taxes_included %}{{ 'cart.taxes_included' | t }}{% else %}{{ 'cart.taxes_shipping' | t }}{% endif %}</p>
+          <button class="gecko-button gecko-cart__primary" type="submit" name="checkout">{{ 'cart.checkout' | t }} <span class="gecko-button__arrow" aria-hidden="true">→</span></button>
+        </aside>
+      </form>
+    {% endif %}
+  </div>
+</section>
 {% schema %}
 {
   "name": "t:general.cart",
-  "settings": []
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "GECKO / CHECKOUT" },
+    { "type": "checkbox", "id": "show_note", "label": "Show cart note", "default": false }
+  ]
 }
 {% endschema %}
