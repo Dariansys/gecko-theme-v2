@@ -1,4 +1,4 @@
-{% comment %}Native media in a consistent contained stage. First visible media loads eagerly.{% endcomment %}
+{% comment %}Full-bleed photography; portraits and unusual ratios remain contained. First visible media loads eagerly.{% endcomment %}
 {% assign model_media = product.media | where: 'media_type', 'model' %}
 {% if model_media.size > 0 %}
   {{ 'gecko-product-model.css' | asset_url | stylesheet_tag }}
@@ -17,8 +17,17 @@
             {% if pass == 1 and media.id != first_media.id %}{% continue %}{% endif %}
             {% if pass == 2 and media.id == first_media.id %}{% continue %}{% endif %}
             {% assign slide_index = slide_index | plus: 1 %}
-            {% assign media_ratio = media.preview_image.aspect_ratio | default: media.aspect_ratio | default: 1 %}
-            <div class="gecko-product__slide" data-media-id="{{ media.id }}" data-media-aspect="{{ media_ratio }}" role="group" aria-roledescription="{{ 'gecko_product.slide' | t | escape }}" aria-label="{{ 'gecko_product.media_position' | t: current: slide_index, total: product.media.size | escape }}">
+            {% liquid
+              assign media_ratio = media.preview_image.aspect_ratio | default: media.aspect_ratio | default: 1
+              assign media_fit = 'contain'
+              assign media_orientation = 'landscape'
+              if media_ratio < 1
+                assign media_orientation = 'portrait'
+              elsif media.media_type == 'image' and media_ratio <= 3
+                assign media_fit = 'cover'
+              endif
+            %}
+            <div class="gecko-product__slide" data-media-id="{{ media.id }}" data-media-aspect="{{ media_ratio }}" data-media-type="{{ media.media_type }}" data-media-fit="{{ media_fit }}" data-media-orientation="{{ media_orientation }}" role="group" aria-roledescription="{{ 'gecko_product.slide' | t | escape }}" aria-label="{{ 'gecko_product.media_position' | t: current: slide_index, total: product.media.size | escape }}">
               {% case media.media_type %}
                 {% when 'image' %}
                   {% liquid
