@@ -145,6 +145,11 @@
       "spec_handle_thickness": "Handle thickness",
       "spec_weight": "Weight",
       "spec_batch_finishes": "Current batch finishes"
+    },
+    "model": {
+      "label": "3D VIEW",
+      "help_desktop": "Drag to rotate · Scroll to zoom",
+      "help_touch": "Drag to rotate · Pinch to zoom"
     }
   },
   "gecko_collection": {

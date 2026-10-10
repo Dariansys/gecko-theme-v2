@@ -6,6 +6,9 @@
 {% liquid
   assign first_media = current_variant.featured_media | default: product.featured_media
   assign first_ratio = first_media.preview_image.aspect_ratio | default: first_media.aspect_ratio | default: 1
+  if first_media.media_type == 'model'
+    assign first_ratio = 1
+  endif
 %}
 <div class="gecko-product__gallery" data-gallery role="region" aria-label="{{ 'gecko_product.gallery' | t | escape }}">
   {% if product.media.size > 0 %}
@@ -19,6 +22,9 @@
             {% assign slide_index = slide_index | plus: 1 %}
             {% liquid
               assign media_ratio = media.preview_image.aspect_ratio | default: media.aspect_ratio | default: 1
+              if media.media_type == 'model'
+                assign media_ratio = 1
+              endif
               assign media_fit = 'contain'
               assign media_orientation = 'landscape'
               if media_ratio < 1
@@ -49,7 +55,15 @@
                 {% when 'external_video' %}
                   {{ media | external_video_tag: loading: 'lazy', title: media.alt }}
                 {% when 'model' %}
-                  {{ media | model_viewer_tag: reveal: 'interaction', toggleable: true, image_size: '1000x' }}
+                  {% assign model_alt = media.alt | default: product.title %}
+                  <div class="gecko-product__model-stage">
+                    {{ media | model_viewer_tag: reveal: 'interaction', loading: 'lazy', toggleable: true, image_size: '1000x', alt: model_alt, touch-action: 'pan-y', interaction-prompt: 'none' }}
+                    <span class="gecko-product__model-label gecko-label">{{ 'gecko_product.model.label' | t }}</span>
+                    <p class="gecko-product__model-help">
+                      <span class="gecko-product__model-help-desktop">{{ 'gecko_product.model.help_desktop' | t }}</span>
+                      <span class="gecko-product__model-help-touch">{{ 'gecko_product.model.help_touch' | t }}</span>
+                    </p>
+                  </div>
               {% endcase %}
             </div>
           {% endfor %}

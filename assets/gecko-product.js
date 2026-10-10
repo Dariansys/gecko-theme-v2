@@ -8,6 +8,7 @@ if (!customElements.get('gecko-product')) {
       this.track = this.querySelector('[data-media-track]');
       this.slides = [...this.querySelectorAll('[data-media-id]')];
       this.activeIndex = 0;
+      this.modelPlayers = new Map();
       this.enhanceOptions();
       this.querySelector('[data-gallery-controls]')?.removeAttribute('hidden');
       this.addEventListener('change', (event) => {
@@ -39,23 +40,17 @@ if (!customElements.get('gecko-product')) {
       });
       if (this.track) this.resizeObserver.observe(this.track);
       this.syncGallery();
-      if (this.querySelector('model-viewer')) {
-        window.Shopify?.loadFeatures?.([{
-          name: 'model-viewer-ui', version: '1.0',
-          onLoad: (errors) => {
-            if (!errors && this.isConnected && window.Shopify.ModelViewerUI) {
-              this.modelPlayers = [...this.querySelectorAll('model-viewer')].map(el => new window.Shopify.ModelViewerUI(el));
-            }
-          },
-        }]);
-      }
     }
 
     disconnectedCallback() {
       this.controller?.abort();
       this.request?.abort();
       this.resizeObserver?.disconnect();
-      this.modelPlayers?.forEach(player => player.pause());
+      this.modelPlayers?.forEach(player => {
+        player.pause();
+        player.destroy?.();
+      });
+      this.modelPlayers?.clear();
       cancelAnimationFrame(this.scrollFrame);
       this.controller = null;
     }
@@ -77,6 +72,29 @@ if (!customElements.get('gecko-product')) {
       });
     }
 
+    async initializeModel(slide) {
+      const viewer = slide.querySelector('model-viewer');
+      if (!viewer || this.modelPlayers.has(viewer) || viewer.dataset.geckoInitializing || !window.Shopify?.loadFeatures) return;
+      viewer.dataset.geckoInitializing = 'true';
+      // Load Shopify's controls once, only after a model slide is visited.
+      this.modelFeature ||= new Promise(resolve => {
+        window.Shopify.loadFeatures([{
+          name: 'model-viewer-ui', version: '1.0',
+          onLoad: errors => resolve(!errors && Boolean(window.Shopify.ModelViewerUI)),
+        }]);
+      });
+      try {
+        const ready = await this.modelFeature;
+        if (ready && this.isConnected && this.slides[this.activeIndex] === slide && !this.modelPlayers.has(viewer)) {
+          this.modelPlayers.set(viewer, new window.Shopify.ModelViewerUI(viewer));
+        }
+      } catch {
+        // Keep the native poster/viewer usable if Shopify's optional controls fail.
+      } finally {
+        delete viewer.dataset.geckoInitializing;
+      }
+    }
+
     syncGallery() {
       if (!this.track || !this.slides.length) return;
       const position = this.track.scrollLeft;
@@ -90,6 +108,9 @@ if (!customElements.get('gecko-product')) {
         slide.setAttribute('aria-hidden', String(i !== index));
         if (i !== index) {
           slide.querySelectorAll('video, model-viewer').forEach(player => player.pause?.());
+          if (i === this.activeIndex) {
+            slide.querySelectorAll('model-viewer').forEach(viewer => this.modelPlayers.get(viewer)?.pause());
+          }
           const iframe = slide.querySelector('iframe');
           if (iframe && i === this.activeIndex && index !== this.activeIndex) {
             // Reset only the outgoing external player to stop hidden playback.
@@ -99,7 +120,19 @@ if (!customElements.get('gecko-product')) {
       });
       // Bound the active photo's stage in CSS; other media keep the same contained frame.
       this.track.style.setProperty('--gecko-media-aspect', this.slides[index].dataset.mediaAspect || '1');
+      if (index !== this.activeIndex) {
+        const viewer = this.slides[index].querySelector('model-viewer');
+        const player = this.modelPlayers.get(viewer);
+        if (player && viewer.getAttribute('reveal') === 'auto') {
+          // Re-enable a previously revealed model without moving gallery keyboard focus.
+          const focusOnPlay = player.config.focusOnPlay;
+          player.config.focusOnPlay = false;
+          player.play();
+          player.config.focusOnPlay = focusOnPlay;
+        }
+      }
       this.activeIndex = index;
+      this.initializeModel(this.slides[index]);
       const prev = this.querySelector('[data-media-prev]');
       const next = this.querySelector('[data-media-next]');
       if (prev) prev.disabled = index === 0;

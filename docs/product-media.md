@@ -83,3 +83,35 @@ Theme Check: **57 files inspected, no offenses**. JavaScript syntax and
 
 Stop after this media refinement; filters, search and dedicated 3D remain outside
 scope.
+
+## Phase 05E — Native 3D gallery refinement
+
+Existing Shopify `model_viewer_tag` media now use a square stage independent of
+their poster ratio. Model slides have generous rotation space, a bright shared
+Gecko color field, a localized 3D pill and secondary mouse/touch instructions.
+Photography, product cards, variants, specifications and purchase controls retain
+their approved behavior. No new renderer, model asset or npm dependency is added.
+
+The native poster uses `reveal="interaction"` and `loading="lazy"`. Shopify's
+ModelViewerUI controls load once per product element, only when a model slide is
+visited; unvisited models are not initialized. Leaving a model pauses native
+animation and its UI interaction. Returning to an already revealed model enables
+controls without stealing gallery keyboard focus. Removing the product section
+pauses and destroys initialized controls. Auto-rotation and autoplay are absent.
+Native camera framing determines model scale; `touch-action="pan-y"` preserves
+vertical page scrolling while native rotation and pinch/wheel zoom remain usable.
+
+35 Chromium layouts passed at 375, 390, 430, 768, 1024, 1440 and 1920px: images
+only, images/model, model first, landscape/model and sold-out/model. Tests used
+Shopify's public native model-viewer v1.12 and localized ModelViewerUI v1.0 with
+a synthetic GLB stored outside the repository. They checked zero GLB requests
+before activation, one model download after activation, mouse/touch rotation,
+wheel/pinch zoom, stable frames and inactive pause. Focused tests also checked
+vertical touch scrolling, native control cleanup and returning to a model.
+Gallery, variant and native-form regressions passed; Theme Check inspected 58
+files with no offenses.
+
+Verify the actual 2.3 MB product model locally on the unpublished Shopify theme,
+including camera framing during rotation, material appearance, mobile devices and
+load time. Fixture performance does not establish the real model's download or
+GPU cost. Cloud did not authenticate to Shopify, synchronize themes or publish.
