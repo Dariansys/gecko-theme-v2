@@ -118,6 +118,24 @@
   .gecko-header__inner { grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto; min-height: 72px; }
   .gecko-header__brand { max-width: 16rem; }
   .gecko-header__nav { display: block; }
+  .gecko-header__menu-item { position: relative; }
+  .gecko-header__dropdown {
+    inset-block-start: calc(100% + var(--space-2));
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+  }
+  /* Keep the gap inside the owning item's pointer area. */
+  .gecko-header__menu-item:has(> .gecko-header__disclosure[open])::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline-start: 50%;
+    width: 16rem;
+    max-width: calc(100vw - var(--gutter) * 2);
+    height: var(--space-2);
+    transform: translateX(-50%);
+    z-index: var(--z-overlay);
+  }
   .gecko-header__actions { gap: var(--space-3); }
   .gecko-header__action--search,
   .gecko-header__action--account { display: inline-flex; }
