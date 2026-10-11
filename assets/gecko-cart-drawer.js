@@ -30,6 +30,10 @@ if (!customElements.get('gecko-cart-drawer')) {
           this.showPageError();
           return;
         }
+        if (form.matches('gecko-product form.gecko-product__form') && (this.busy || form.dataset.cartSubmitting === 'true')) {
+          event.preventDefault();
+          return;
+        }
         if (!form.matches('gecko-product form.gecko-product__form') || event.defaultPrevented || (event.submitter && !event.submitter.matches('[data-primary-add]'))) return;
         const details = form.closest('[data-product-details]');
         if (details?.dataset.available !== 'true' || details.getAttribute('aria-busy') === 'true' || !form.checkValidity()) return;
@@ -56,6 +60,11 @@ if (!customElements.get('gecko-cart-drawer')) {
           return message;
         }, productStatus);
       }, options);
+      // Commit the explicit button action, rather than a quantity blur caused by that click.
+      this.dialog.addEventListener('pointerdown', event => {
+        const input = document.activeElement;
+        if (event.button === 0 && input.matches('[data-cart-quantity]') && input.value !== input.defaultValue && event.target.closest('[data-cart-remove], [data-cart-step]')) event.preventDefault();
+      }, options);
       this.dialog.addEventListener('click', event => {
         if (event.target.closest('[data-drawer-close]')) this.close();
         if (event.target === this.dialog) {
@@ -63,7 +72,7 @@ if (!customElements.get('gecko-cart-drawer')) {
           if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) this.close();
         }
         const remove = event.target.closest('[data-cart-remove]');
-        if (remove && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
+        if (remove && event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey) {
           event.preventDefault();
           if (!this.busy) this.change(remove.closest('[data-cart-item]'), 0);
         }
@@ -146,7 +155,7 @@ if (!customElements.get('gecko-cart-drawer')) {
       this.content.setAttribute('aria-busy', String(value));
       if (value) {
         this.disabledStates = new Map();
-        const selector = 'gecko-product [data-primary-add], gecko-cart-drawer button:not([data-drawer-close]), gecko-cart-drawer input';
+        const selector = 'gecko-product .gecko-product__form button[type=submit], gecko-cart-drawer button:not([data-drawer-close]), gecko-cart-drawer input';
         document.querySelectorAll(selector + (lockProductInputs ? ', gecko-product [data-option-value], gecko-product [name="quantity"]' : '')).forEach(element => {
           this.disabledStates.set(element, element.disabled);
           element.disabled = true;
@@ -162,6 +171,26 @@ if (!customElements.get('gecko-cart-drawer')) {
         if (checkout) checkout.disabled = Boolean(this.stale);
       }
       this.querySelectorAll('[data-cart-remove]').forEach(link => link.setAttribute('aria-disabled', String(value)));
+      if (this.submittingForm) {
+        const button = this.submittingForm.querySelector('[data-primary-add]');
+        if (value) {
+          this.submittingForm.dataset.cartSubmitting = 'true';
+          this.formBusy = this.submittingForm.getAttribute('aria-busy');
+          this.buttonBusy = button.getAttribute('aria-busy');
+          this.buttonLabel = button.firstChild.textContent;
+          this.submittingForm.setAttribute('aria-busy', 'true');
+          button.setAttribute('aria-busy', 'true');
+          button.firstChild.textContent = this.dataset.adding;
+        } else {
+          delete this.submittingForm.dataset.cartSubmitting;
+          for (const [element, previous] of [[this.submittingForm, this.formBusy], [button, this.buttonBusy]]) {
+            if (previous === null) element.removeAttribute('aria-busy');
+            else element.setAttribute('aria-busy', previous);
+          }
+          button.firstChild.textContent = this.buttonLabel;
+          this.submittingForm = null;
+        }
+      }
     }
 
     async run(task, productStatus) {
@@ -173,24 +202,35 @@ if (!customElements.get('gecko-cart-drawer')) {
       this.status.textContent = this.dataset.loading;
       const product = productStatus?.closest('gecko-product');
       if (product) product.setStatus(this.dataset.loading);
+      this.submittingForm = productStatus?.closest('form');
       this.setBusy(true, Boolean(productStatus));
       try {
         const message = await task();
         if (this.isConnected) {
+          const previous = this.productError;
+          if (previous?.product.querySelector('[data-product-status]')?.textContent.startsWith(previous.message)) previous.product.setStatus('');
+          this.productError = null;
           this.status.textContent = typeof message === 'string' ? message : '';
           if (product) product.setStatus(this.dialog.open ? '' : this.status.textContent);
         }
-      } catch {
-        // Never replay an uncertain mutation: it may already have reached Shopify.
+      } catch (error) {
+        // Reconcile even a 422: Shopify may have accepted part of an add before rejecting it.
+        // Only read state here; never replay an uncertain mutation.
         this.stale = true;
+        let reconciled = false;
+        try { await this.refresh(true); reconciled = true; } catch { /* Keep native cart recovery available. */ }
+        const message = reconciled
+          ? error.customerMessage || this.dataset.reconciledError
+          : this.dataset.error;
         if (product && !this.dialog.open) {
           const link = document.createElement('a');
           link.href = this.dataset.cartUrl;
           link.textContent = this.querySelector('.gecko-cart-drawer__view-cart').textContent + ' →';
-          product.setStatus(this.dataset.error, true, link);
+          product.setStatus(message, true, link);
+          this.productError = { product, message };
         }
         this.status.textContent = '';
-        this.error.textContent = product && !this.dialog.open ? '' : this.dataset.error;
+        this.error.textContent = product && !this.dialog.open ? '' : message;
         if (product && this.dialog.open) product.setStatus('');
         if (this.fullCartStale) this.showPageError();
       } finally {
@@ -226,6 +266,8 @@ if (!customElements.get('gecko-cart-drawer')) {
       }
       const title = item.dataset.itemTitle;
       const key = item.dataset.itemKey;
+      // Keep the visible quantity at its last server-confirmed value while the request runs.
+      input.value = input.defaultValue;
       await this.run(async () => {
         // Reconcile an earlier uncertain response before accepting a new absolute quantity.
         if (this.stale) { await this.refresh(); return this.dataset.refreshed; }
@@ -243,7 +285,19 @@ if (!customElements.get('gecko-cart-drawer')) {
     }
 
     async readMutation(response) {
-      if (!response.ok) throw new Error('Cart mutation failed');
+      if (!response.ok) {
+        const error = new Error('Cart mutation failed');
+        if (response.status >= 400 && response.status < 500) {
+          let data;
+          try { data = await response.json(); } catch { /* Use translated fallback copy. */ }
+          const description = typeof data?.description === 'string' ? data.description : data?.message;
+          const text = typeof description === 'string' ? description.replace(/\s+/g, ' ').trim() : '';
+          // Plain customer copy only; never render HTML, JSON, stack traces or arbitrary objects.
+          error.customerMessage = text && text.length <= 500 && !/[<>{}\u0000-\u001f]|\b(json|exception|stack|technical)\b/i.test(text)
+            ? text : this.dataset.rejected;
+        }
+        throw error;
+      }
       const data = await response.json();
       if (this.applySections(data.sections, true)) return;
       // Section rendering can fail independently after a successful mutation.
@@ -310,6 +364,10 @@ if (!customElements.get('gecko-cart-drawer')) {
       document.querySelectorAll('[data-gecko-bag-count]').forEach(element => { element.textContent = `(${count})`; });
       document.querySelectorAll('[data-gecko-bag-count-label]').forEach(element => { element.textContent = updated.dataset.countLabel; });
       this.stale = false;
+      if (this.busy) {
+        this.content.querySelectorAll('button, input').forEach(element => { this.disabledStates.set(element, element.disabled); element.disabled = true; });
+        this.querySelectorAll('[data-cart-remove]').forEach(link => link.setAttribute('aria-disabled', 'true'));
+      }
       return true;
     }
 
