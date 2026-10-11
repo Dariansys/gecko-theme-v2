@@ -7,8 +7,9 @@
 .gecko-cart__items, .gecko-cart__details { min-width: 0; }
 .gecko-cart__list { display: grid; gap: var(--space-4); margin: 0 0 var(--space-6); padding: 0; list-style: none; }
 .gecko-cart__item { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: var(--space-5) var(--space-4); padding: var(--space-4); border: var(--border-subtle); border-radius: calc(var(--radius-large) * 1.5); background: var(--gecko-white); }
-.gecko-cart__media { display: block; width: 100%; aspect-ratio: 1; align-self: start; }
-.gecko-cart__media img, .gecko-cart__placeholder { display: block; width: 100%; height: 100%; object-fit: contain; }
+.gecko-cart__media { display: block; width: 100%; aspect-ratio: 1; align-self: start; padding: 0; overflow: hidden; }
+.gecko-cart__media img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.gecko-cart__placeholder { display: block; width: 100%; height: 100%; object-fit: contain; }
 .gecko-cart__details h2 { margin: 0 0 var(--space-3); font-size: var(--type-body-large); line-height: 1.3; letter-spacing: var(--tracking-heading); overflow-wrap: anywhere; }
 .gecko-cart a { color: inherit; }
 .gecko-cart__details h2 a { text-decoration: none; }
