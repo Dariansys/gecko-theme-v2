@@ -218,7 +218,10 @@
 .gecko-product__form-error { margin-bottom: var(--space-4); }
 .gecko-product [hidden] { display: none !important; }
 .gecko-product[data-enhanced] .gecko-product__native-variants { display: none; }
-.gecko-product__update-error { margin: var(--space-4) var(--gutter) 0; color: var(--gecko-crimson); }
+.gecko-product [data-product-status] { display: block; }
+.gecko-product__purchase:has(> .gecko-product__update-error) { margin-top: var(--space-4); }
+.gecko-product__update-error { flex: 1 0 100%; min-width: 0; margin: 0; padding: var(--space-3) var(--space-4); border: 1px solid color-mix(in srgb, var(--gecko-crimson) 30%, transparent); border-radius: var(--radius-large); background: color-mix(in srgb, var(--gecko-crimson) 5%, var(--gecko-off-white)); color: var(--gecko-black); font-size: var(--type-body-small); line-height: 1.5; overflow-wrap: anywhere; }
+.gecko-product__update-error a { display: block; width: fit-content; margin-top: var(--space-2); color: inherit; text-underline-offset: .25em; }
 .gecko-product :is(button, select, input, a, [tabindex]):focus-visible { outline: 2px solid var(--gecko-black); outline-offset: 4px; }
 @media (min-width: 1024px) {
   .gecko-product { padding-top: var(--space-12); }

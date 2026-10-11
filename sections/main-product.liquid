@@ -22,6 +22,7 @@
         {% if form.errors %}<div role="alert" class="gecko-product__form-error">{{ form.errors | default_errors }}</div>{% endif %}
         {% render 'product-variant-picker', product: product, current_variant: current_variant, section_id: section.id %}
         <div class="gecko-product__purchase">
+          <p class="gecko-visually-hidden" data-product-status role="status" aria-live="polite" aria-atomic="true" tabindex="-1"></p>
           <div class="gecko-product__quantity">
             <label for="{{ quantity_id }}">{{ 'gecko_product.quantity' | t }}</label>
             <input id="{{ quantity_id }}" type="number" name="quantity" value="{{ current_variant.quantity_rule.min | default: 1 }}" min="{{ current_variant.quantity_rule.min | default: 1 }}" step="{{ current_variant.quantity_rule.increment | default: 1 }}"{% if current_variant.quantity_rule.max %} max="{{ current_variant.quantity_rule.max }}"{% endif %} inputmode="numeric" required>
@@ -38,7 +39,6 @@
       {% if section.settings.shipping_note != blank %}<p class="gecko-product__note">{{ section.settings.shipping_note | escape }}</p>{% endif %}
     </div>
   </div>
-  <p class="gecko-visually-hidden" data-product-status role="status" aria-live="polite" aria-atomic="true"></p>
 </gecko-product>
 {% schema %}
 {

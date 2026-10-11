@@ -141,6 +141,22 @@ if (!customElements.get('gecko-product')) {
       if (count) count.textContent = this.slides[index].getAttribute('aria-label');
     }
 
+    setStatus(message, error = false, link) {
+      const status = this.querySelector('[data-product-status]');
+      status.className = error ? 'gecko-product__update-error' : 'gecko-visually-hidden';
+      status.setAttribute('role', error ? 'alert' : 'status');
+      if (error) status.removeAttribute('aria-live');
+      else status.setAttribute('aria-live', 'polite');
+      status.textContent = message;
+      if (link) status.append(link);
+      if (error) {
+        const bounds = status.getBoundingClientRect();
+        if (bounds.top < 0 || bounds.bottom > innerHeight) {
+          status.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+        }
+      }
+    }
+
     async updateVariant(input) {
       if (input.dataset.productUrl && new URL(input.dataset.productUrl, location.origin).pathname !== new URL(this.dataset.productUrl, location.origin).pathname) {
         location.assign(input.dataset.productUrl);
@@ -149,7 +165,6 @@ if (!customElements.get('gecko-product')) {
       this.request?.abort();
       const request = this.request = new AbortController();
       const details = this.querySelector('[data-product-details]');
-      const status = this.querySelector('[data-product-status]');
       const quantity = details.querySelector('[name="quantity"]').value;
       const focusValue = input.value;
       const options = [...details.querySelectorAll('[data-option-value]:checked')].map(value => value.value);
@@ -160,8 +175,7 @@ if (!customElements.get('gecko-product')) {
       details.setAttribute('aria-busy', 'true');
       details.querySelector('[data-primary-add]').disabled = true;
       details.querySelectorAll('.gecko-product__checkout').forEach(el => el.hidden = true);
-      status.className = 'gecko-visually-hidden';
-      status.textContent = this.dataset.updating;
+      this.setStatus(this.dataset.updating);
       try {
         const response = await fetch(url, { signal: request.signal });
         if (!response.ok) throw new Error('Product section response failed');
@@ -186,14 +200,13 @@ if (!customElements.get('gecko-product')) {
           url.searchParams.set('variant', updated.dataset.selectedVariant);
         }
         history.replaceState({}, '', url);
-        status.textContent = [updated.querySelector('.gecko-product__price').textContent.trim(), updated.querySelector('[data-primary-add]').textContent.trim()].join('. ');
+        this.setStatus([updated.querySelector('.gecko-product__price').textContent.trim(), updated.querySelector('[data-primary-add]').textContent.trim()].join('. '));
         if (updated.querySelector('.gecko-product__checkout')) window.Shopify?.PaymentButton?.init();
       } catch (error) {
         if (request.signal.aborted) return;
         // Restore server-confirmed choices; never submit the newly requested choice with a stale ID.
         details.querySelectorAll('[data-option-value]').forEach(value => { value.checked = value.defaultChecked; });
-        status.className = 'gecko-product__update-error';
-        status.textContent = this.dataset.updateError;
+        this.setStatus(this.dataset.updateError, true);
         details.querySelector('[data-primary-add]').disabled = details.dataset.available !== 'true';
         details.querySelectorAll('.gecko-product__checkout').forEach(el => el.hidden = false);
       } finally {

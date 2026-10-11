@@ -171,31 +171,27 @@ if (!customElements.get('gecko-cart-drawer')) {
       const focus = item ? { key: item.dataset.itemKey, control: active.dataset.focus, index: [...this.querySelectorAll('[data-cart-item]')].indexOf(item) } : null;
       this.error.textContent = '';
       this.status.textContent = this.dataset.loading;
-      if (productStatus) {
-        productStatus.className = 'gecko-visually-hidden';
-        productStatus.style.display = 'block';
-        productStatus.textContent = this.dataset.loading;
-      }
+      const product = productStatus?.closest('gecko-product');
+      if (product) product.setStatus(this.dataset.loading);
       this.setBusy(true, Boolean(productStatus));
       try {
         const message = await task();
         if (this.isConnected) {
           this.status.textContent = typeof message === 'string' ? message : '';
-          if (productStatus) productStatus.textContent = this.status.textContent;
+          if (product) product.setStatus(this.dialog.open ? '' : this.status.textContent);
         }
       } catch {
         // Never replay an uncertain mutation: it may already have reached Shopify.
         this.stale = true;
-        if (productStatus) {
-          productStatus.className = 'gecko-product__update-error';
-          productStatus.textContent = this.dataset.error + ' ';
+        if (product && !this.dialog.open) {
           const link = document.createElement('a');
           link.href = this.dataset.cartUrl;
-          link.textContent = this.querySelector('.gecko-cart-drawer__view-cart').textContent;
-          productStatus.append(link);
+          link.textContent = this.querySelector('.gecko-cart-drawer__view-cart').textContent + ' →';
+          product.setStatus(this.dataset.error, true, link);
         }
         this.status.textContent = '';
-        this.error.textContent = this.dataset.error;
+        this.error.textContent = product && !this.dialog.open ? '' : this.dataset.error;
+        if (product && this.dialog.open) product.setStatus('');
         if (this.fullCartStale) this.showPageError();
       } finally {
         this.setBusy(false);
