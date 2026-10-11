@@ -16,7 +16,6 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/DSC_8469_18ffb72d-6104-439e-8941-c0c055d6c970.jpg",
-            "mobile_image": "shopify://shop_images/photos-pulse8.jpg",
             "label": "",
             "caption": "",
             "alt": "",
@@ -27,7 +26,6 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/img_1683.jpg",
-            "mobile_image": "shopify://shop_images/photos-pulse12.jpg",
             "label": "",
             "caption": "",
             "alt": "",
@@ -38,7 +36,6 @@
           "type": "slide",
           "settings": {
             "image": "shopify://shop_images/img_0006.jpg",
-            "mobile_image": "shopify://shop_images/photos-pulse7.jpg",
             "label": "",
             "caption": "",
             "alt": "",
@@ -48,7 +45,6 @@
         "slide_7ai3JJ": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/photos-pulse7.jpg",
             "mobile_image": "shopify://shop_images/Weixin_Image_20261008205040_78_18.jpg",
             "label": "",
             "caption": "",
@@ -100,7 +96,7 @@
         "balisongs": {
           "type": "category",
           "settings": {
-            "image": "shopify://shop_images/photos-pulse7.jpg",
+            "image": "shopify://shop_images/pulse-1362617.jpg",
             "collection": "mono-balisong",
             "label": "Balisongs",
             "description": "Designed for flow.",
