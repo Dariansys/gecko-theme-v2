@@ -23,11 +23,11 @@
           {{ 'header.account' | t }}
         </a>
       {% endif %}
-      <a class="gecko-header__action gecko-header__action--bag" href="{{ routes.cart_url }}">
+      <a class="gecko-header__action gecko-header__action--bag" data-gecko-cart-open href="{{ routes.cart_url }}">
         <span>{{ 'header.bag' | t }}</span>
         {% if section.settings.show_cart_count %}
-          <span aria-hidden="true">({{ cart.item_count }})</span>
-          <span class="gecko-visually-hidden">{{ 'header.cart_count' | t: count: cart.item_count }}</span>
+          <span aria-hidden="true" data-gecko-bag-count>({{ cart.item_count }})</span>
+          <span class="gecko-visually-hidden" data-gecko-bag-count-label>{{ 'header.cart_count' | t: count: cart.item_count }}</span>
         {% endif %}
       </a>
       {% render 'gecko-mobile-navigation', header_settings: section.settings, section_id: section.id %}

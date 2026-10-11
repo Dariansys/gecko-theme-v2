@@ -204,5 +204,19 @@
     "explore": "EXPLORE PRODUCTS",
     "other_results": "Other matches",
     "pagination": "Search result pages"
+  },
+  "cart_drawer": {
+    "heading": "YOUR BAG",
+    "close": "Close bag",
+    "empty": "YOUR BAG IS EMPTY.",
+    "empty_message": "Find something designed for your everyday carry.",
+    "view_cart": "View cart",
+    "loading": "Updating your bag…",
+    "error": "We couldn’t confirm this change. Please view your cart before trying again.",
+    "invalid_quantity": "Choose a quantity within the available limits.",
+    "updated": "Quantity updated.",
+    "added": "{{ title }} added to your bag.",
+    "removed": "{{ title }} removed from your bag.",
+    "refreshed": "Your bag is refreshed. Review it before trying your change again."
   }
 }

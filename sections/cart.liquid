@@ -1,6 +1,6 @@
 {{ 'gecko-cart.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'gecko-cart.js' | asset_url }}" defer></script>
-<section class="gecko-cart surface-light gecko-section-space" aria-labelledby="CartTitle-{{ section.id }}">
+<section class="gecko-cart surface-light gecko-section-space" aria-labelledby="CartTitle-{{ section.id }}" data-cart-page-section="{{ section.id }}">
   <div class="gecko-container gecko-container--wide">
     <header class="gecko-cart__header">
       {% if section.settings.eyebrow != blank %}<p class="gecko-label">{{ section.settings.eyebrow | escape }}</p>{% endif %}
@@ -19,14 +19,9 @@
           <ul class="gecko-cart__list" role="list">
             {% for item in cart.items %}
               {% assign item_index = forloop.index %}
-              <li class="gecko-cart__item">
+              <li class="gecko-cart__item" data-cart-line-key="{{ item.key | escape }}">
                 <a class="gecko-cart__media gecko-product-media" href="{{ item.url }}" aria-label="{{ item.product.title | escape }}">
-                  {% if item.image %}
-                    {% assign image_alt = item.image.alt | default: item.product.title %}
-                    {{ item.image | image_url: width: 480 | image_tag: widths: '120, 180, 240, 360, 480', sizes: '(min-width: 768px) 160px, 104px', loading: 'lazy', alt: image_alt }}
-                  {% else %}
-                    {{ 'product-1' | placeholder_svg_tag: 'gecko-cart__placeholder' }}
-                  {% endif %}
+                  {% render 'gecko-cart-item-image', item: item, sizes: '(min-width: 768px) 160px, 104px', placeholder_class: 'gecko-cart__placeholder' %}
                 </a>
                 <div class="gecko-cart__details">
                   <h2><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h2>

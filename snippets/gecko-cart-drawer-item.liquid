@@ -1,0 +1,34 @@
+<li class="gecko-cart-drawer__item" data-cart-item data-item-key="{{ item.key | escape }}" data-item-title="{{ item.product.title | escape }}">
+  <a class="gecko-cart-drawer__media gecko-product-media" href="{{ item.url }}" aria-label="{{ item.product.title | escape }}">
+    {% render 'gecko-cart-item-image', item: item, sizes: '88px', placeholder_class: 'gecko-cart-drawer__placeholder' %}
+  </a>
+  <div class="gecko-cart-drawer__details">
+    <h3><a href="{{ item.url }}">{{ item.product.title | escape }}</a></h3>
+    {% unless item.product.has_only_default_variant %}
+      <dl class="gecko-cart-drawer__options">
+        {% for option in item.options_with_values %}<div><dt>{{ option.name | escape }}:</dt> <dd>{{ option.value | escape }}</dd></div>{% endfor %}
+      </dl>
+    {% endunless %}
+    {% if item.selling_plan_allocation %}<p class="gecko-cart-drawer__meta">{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>{% endif %}
+    {% for property in item.properties %}
+      {% assign first_character = property.first | slice: 0 %}
+      {% if property.last != blank and first_character != '_' %}<p class="gecko-cart-drawer__meta">{{ property.first | escape }}: {{ property.last | escape }}</p>{% endif %}
+    {% endfor %}
+    <p class="gecko-cart-drawer__price"><span class="gecko-visually-hidden">{{ 'cart.line_total' | t }}</span>{% if item.original_line_price != item.final_line_price %}<s>{{ item.original_line_price | money_with_currency }}</s>{% endif %}<strong>{{ item.final_line_price | money_with_currency }}</strong></p>
+    {% for discount in item.line_level_discount_allocations %}<p class="gecko-cart-drawer__meta">{{ discount.discount_application.title | escape }} (−{{ discount.amount | money_with_currency }})</p>{% endfor %}
+  </div>
+  <div class="gecko-cart-drawer__item-controls">
+    {% liquid
+      assign quantity_min = item.variant.quantity_rule.min | default: 1
+      assign quantity_increment = item.variant.quantity_rule.increment | default: 1
+      assign next_quantity = item.quantity | plus: quantity_increment
+    %}
+    <div class="gecko-cart-drawer__quantity">
+      <button type="button" data-cart-step="-1" data-focus="decrease" aria-label="{{ 'cart.decrease_for' | t: title: item.product.title | escape }}"{% if item.quantity <= quantity_min %} disabled{% endif %}>−</button>
+      <label class="gecko-visually-hidden" for="DrawerQuantity-{{ section_id }}-{{ index }}">{{ 'cart.quantity_for' | t: title: item.product.title | escape }}</label>
+      <input id="DrawerQuantity-{{ section_id }}-{{ index }}" type="number" value="{{ item.quantity }}" min="{{ quantity_min }}" step="{{ item.variant.quantity_rule.increment | default: 1 }}" {% if item.variant.quantity_rule.max %}max="{{ item.variant.quantity_rule.max }}"{% endif %} inputmode="numeric" required data-cart-quantity data-focus="quantity">
+      <button type="button" data-cart-step="1" data-focus="increase" aria-label="{{ 'cart.increase_for' | t: title: item.product.title | escape }}"{% if item.variant.quantity_rule.max and next_quantity > item.variant.quantity_rule.max %} disabled{% endif %}>+</button>
+    </div>
+    <a class="gecko-cart-drawer__remove" href="{{ item.url_to_remove }}" data-cart-remove data-focus="remove" aria-label="{{ 'cart.remove_for' | t: title: item.product.title | escape }}">{{ 'cart.remove' | t }}</a>
+  </div>
+</li>

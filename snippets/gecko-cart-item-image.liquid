@@ -1,0 +1,18 @@
+{% comment %}Shared static cart thumbnail; variant image first, then product image/model poster. Pass item, sizes and placeholder_class.{% endcomment %}
+{% liquid
+  assign image = item.image | default: item.product.featured_image | default: item.product.images.first
+  if image == blank
+    for media in item.product.media
+      if media.media_type == 'model' and media.preview_image != blank
+        assign image = media.preview_image
+        break
+      endif
+    endfor
+  endif
+  assign image_alt = image.alt | default: item.product.title
+%}
+{% if image != blank %}
+  {{ image | image_url: width: 480 | image_tag: widths: '120, 180, 240, 360, 480', sizes: sizes, loading: 'lazy', alt: image_alt }}
+{% else %}
+  {{ 'product-1' | placeholder_svg_tag: placeholder_class }}
+{% endif %}

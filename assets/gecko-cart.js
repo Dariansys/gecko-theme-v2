@@ -32,4 +32,5 @@
   };
   initialize(document);
   document.addEventListener('shopify:section:load', (event) => initialize(event.target));
+  document.addEventListener('gecko:cart-page-updated', (event) => initialize(event.target));
 })();

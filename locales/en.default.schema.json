@@ -225,5 +225,8 @@
   "gecko_search": {
     "eyebrow": "Eyebrow",
     "results_per_page": "Results per page"
+  },
+  "cart_drawer": {
+    "name": "Cart drawer"
   }
 }
