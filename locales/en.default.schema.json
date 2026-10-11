@@ -221,5 +221,9 @@
     "products_per_page": "Products per page",
     "show_description": "Show collection description",
     "show_product_count": "Show product count"
+  },
+  "gecko_search": {
+    "eyebrow": "Eyebrow",
+    "results_per_page": "Results per page"
   }
 }

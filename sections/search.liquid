@@ -1,70 +1,74 @@
-{% comment %}
-  This section is used in the search template to render search results for
-  products, articles, and pages.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/search
-{% endcomment %}
-
-<h1>{{ 'search.title' | t }}</h1>
-
-<form action="{{ routes.search_url }}" method="get" role="search">
-  <input
-    type="search"
-    size="50"
-    name="q"
-    value="{{ search.terms | escape }}"
-    placeholder="{{ 'search.placeholder' | t }}"
-  >
-  <button type="submit">{{ 'search.submit' | t }}</button>
-</form>
-
-{% if search.performed %}
-  {% if search.results_count == 0 %}
-    <p>{{ 'search.no_results_html' | t: terms: search.terms }}</p>
-  {% else %}
-    <p>{{ 'search.results_for_html' | t: terms: search.terms, count: search.results_count }}</p>
-
-    <div class="search-results">
-      {% paginate search.results by 20 %}
-        {% # Search result items may be an article, a page, or a product. %}
-        {% for result in search.results %}
-          <div class="search-result">
-            {% assign featured_image = result.featured_image | default: result.image %}
-            {% if featured_image %}
-              {% render 'image', class: 'search-result__image', image: featured_image, url: result.url, width: 400 %}
-            {% endif %}
-            <div class="search-result__content">
-              <p>
-                {{ result.title | link_to: result.url }}
-                {% if result.price %}
-                  {{ result.price | money_with_currency }}
-                {% endif %}
-              </p>
+{{ 'gecko-featured-products.css' | asset_url | stylesheet_tag }}
+{{ 'gecko-collection.css' | asset_url | stylesheet_tag }}
+{{ 'gecko-search.css' | asset_url | stylesheet_tag }}
+<section class="gecko-search surface-light full-width gecko-section-space" aria-labelledby="GeckoSearchTitle-{{ section.id }}">
+  <div class="gecko-container gecko-container--wide">
+    <header class="gecko-search__header">
+      {% if section.settings.eyebrow != blank %}<p class="gecko-label">{{ section.settings.eyebrow | escape }}</p>{% endif %}
+      <h1 id="GeckoSearchTitle-{{ section.id }}">{{ 'gecko_search.heading' | t }}</h1>
+      <div class="gecko-gradient-line" aria-hidden="true"></div>
+      <form class="gecko-search__form" action="{{ routes.search_url }}" method="get" role="search" aria-label="{{ 'gecko_search.form_label' | t | escape }}">
+        <label class="gecko-visually-hidden" for="GeckoSearchInput-{{ section.id }}">{{ 'gecko_search.input_label' | t }}</label>
+        <input id="GeckoSearchInput-{{ section.id }}" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'gecko_search.placeholder' | t | escape }}">
+        <input type="hidden" name="type" value="product">
+        <input type="hidden" name="options[prefix]" value="last">
+        <button type="submit" aria-label="{{ 'gecko_search.submit' | t | escape }}"><span aria-hidden="true">→</span></button>
+      </form>
+      {% unless search.performed %}<p class="gecko-search__support">{{ 'gecko_search.support' | t }}</p>{% endunless %}
+    </header>
+    {% if search.performed %}
+      <div class="gecko-search__results-header">
+        <h2>{{ 'gecko_search.results_for' | t: terms: search.terms | escape }}</h2>
+        <p class="gecko-label">{{ 'gecko_search.result_count' | t: count: search.results_count }}</p>
+      </div>
+      {% if search.results_count == 0 %}
+        <div class="gecko-search__empty">
+          <h3>{{ 'gecko_search.empty_heading' | t }}</h3>
+          <p>{{ 'gecko_search.empty_description' | t: terms: search.terms | escape }}</p>
+          <p>{{ 'gecko_search.empty_hint' | t }}</p>
+          <a class="gecko-button gecko-search__explore" href="{{ routes.all_products_collection_url }}">{{ 'gecko_search.explore' | t }} <span class="gecko-button__arrow" aria-hidden="true">→</span></a>
+        </div>
+      {% else %}
+        {% paginate search.results by section.settings.results_per_page %}
+          {% assign product_results = search.results | where: 'object_type', 'product' %}
+          {% if product_results.size > 0 %}
+            <ul class="gecko-collection__grid" role="list">
+              {% for product in product_results %}
+                {% assign accent_index = paginate.current_offset | plus: forloop.index0 %}
+                <li>{% render 'gecko-product-card', product: product, show_price: section.settings.show_price, show_vendor: section.settings.show_vendor, show_badge: section.settings.show_badge, accent_index: accent_index %}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% comment %}Direct mixed-type search URLs keep their native totals and pagination; non-products stay outside the product grid.{% endcomment %}
+          {% capture other_results %}
+            {% for result in search.results %}
+              {% if result.object_type == 'article' or result.object_type == 'page' %}<li><a href="{{ result.url | escape }}">{{ result.title | escape }}</a></li>{% endif %}
+            {% endfor %}
+          {% endcapture %}
+          {% assign other_results = other_results | strip %}
+          {% if other_results != blank %}
+            <div class="gecko-search__other-results">
+              <h3>{{ 'gecko_search.other_results' | t }}</h3>
+              <ul role="list">{{ other_results }}</ul>
             </div>
-          </div>
-        {% endfor %}
-
-        {{ paginate | default_pagination }}
-      {% endpaginate %}
-    </div>
-  {% endif %}
-{% endif %}
-
-{% stylesheet %}
-  .search-results {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-  .search-results .prev,
-  .search-results .page,
-  .search-results .next {
-    grid-column: 1 / -1;
-  }
-{% endstylesheet %}
-
+          {% endif %}
+          {% assign pagination_label = 'gecko_search.pagination' | t %}
+          {% render 'gecko-pagination', paginate: paginate, label: pagination_label %}
+        {% endpaginate %}
+      {% endif %}
+    {% endif %}
+  </div>
+</section>
 {% schema %}
 {
   "name": "t:general.search",
-  "settings": []
+  "enabled_on": { "templates": ["search"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "t:gecko_search.eyebrow", "default": "GECKO / SEARCH" },
+    { "type": "range", "id": "results_per_page", "label": "t:gecko_search.results_per_page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "checkbox", "id": "show_vendor", "label": "t:featured_products.show_vendor", "default": false },
+    { "type": "checkbox", "id": "show_price", "label": "t:featured_products.show_price", "default": true },
+    { "type": "checkbox", "id": "show_badge", "label": "t:featured_products.show_badge", "default": true }
+  ]
 }
 {% endschema %}

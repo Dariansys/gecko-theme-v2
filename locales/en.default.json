@@ -185,5 +185,24 @@
   },
   "product_media": {
     "placeholder": "Photography coming soon"
+  },
+  "gecko_search": {
+    "heading": "SEARCH",
+    "form_label": "Search products",
+    "input_label": "Search products",
+    "placeholder": "Search products",
+    "submit": "Submit search",
+    "support": "Find your next everyday carry.",
+    "results_for": "SEARCH RESULTS FOR “{{ terms }}”",
+    "result_count": {
+      "one": "{{ count }} result",
+      "other": "{{ count }} results"
+    },
+    "empty_heading": "NO RESULTS.",
+    "empty_description": "We couldn’t find anything for “{{ terms }}”.",
+    "empty_hint": "Try a different search term, or explore the Store.",
+    "explore": "EXPLORE PRODUCTS",
+    "other_results": "Other matches",
+    "pagination": "Search result pages"
   }
 }

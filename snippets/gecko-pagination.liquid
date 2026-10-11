@@ -1,0 +1,33 @@
+{% comment %}Native collection/search pagination. Pass paginate and the navigation label.{% endcomment %}
+      {% if paginate.pages > 1 %}
+        <nav class="gecko-collection__pagination" aria-label="{{ label | escape }}">
+          <ul role="list">
+            <li>
+              {% if paginate.previous %}
+                <a class="gecko-collection__page-control" href="{{ paginate.previous.url | escape }}" rel="prev" aria-label="{{ 'gecko_collection.previous' | t | escape }}"><span aria-hidden="true">←</span></a>
+              {% else %}
+                <span class="gecko-collection__page-control" aria-disabled="true"><span aria-hidden="true">←</span><span class="gecko-visually-hidden">{{ 'gecko_collection.previous' | t }}</span></span>
+              {% endif %}
+            </li>
+            {% for part in paginate.parts %}
+              {% assign page_number = part.title | plus: 0 %}
+              <li>
+                {% if part.is_link %}
+                  <a class="gecko-collection__page-control" href="{{ part.url | escape }}" aria-label="{{ 'gecko_collection.page' | t: number: part.title | escape }}">{{ part.title }}</a>
+                {% elsif page_number == paginate.current_page %}
+                  <span class="gecko-collection__page-control is-current" aria-current="page" aria-label="{{ 'gecko_collection.page' | t: number: part.title | escape }}">{{ part.title }}</span>
+                {% else %}
+                  <span class="gecko-collection__page-gap" aria-hidden="true">{{ part.title }}</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+            <li>
+              {% if paginate.next %}
+                <a class="gecko-collection__page-control" href="{{ paginate.next.url | escape }}" rel="next" aria-label="{{ 'gecko_collection.next' | t | escape }}"><span aria-hidden="true">→</span></a>
+              {% else %}
+                <span class="gecko-collection__page-control" aria-disabled="true"><span aria-hidden="true">→</span><span class="gecko-visually-hidden">{{ 'gecko_collection.next' | t }}</span></span>
+              {% endif %}
+            </li>
+          </ul>
+        </nav>
+      {% endif %}
