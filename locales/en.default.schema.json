@@ -153,9 +153,7 @@
     "image_info": "Use category photography. Set a focal point in the image editor or choose Fit entire image to prevent cropping.",
     "mobile_image": "Mobile image",
     "mobile_info": "Optional image below 768px. Falls back to the main image.",
-    "label": "Category label",
-    "link": "Category link",
-    "link_info": "Choose the category destination. Blank links use the Shopify all-products route.",
+    "label": "Custom display title",
     "alt": "Image alt text",
     "alt_info": "Describe the photograph accurately for desktop and mobile. Blank uses the image library alt text; decorative images may use empty alt text.",
     "accent": "Color accent",
@@ -167,7 +165,10 @@
     "contain": "Fit entire image",
     "defaults": {
       "heading": "Explore the collection"
-    }
+    },
+    "collection": "Collection",
+    "collection_info": "Select the Shopify collection this card opens. Unconfigured cards are not linked.",
+    "label_info": "Optional. Leave blank to use the selected collection title."
   },
   "featured_products": {
     "name": "Featured products",

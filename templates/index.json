@@ -101,9 +101,9 @@
           "type": "category",
           "settings": {
             "image": "shopify://shop_images/photos-pulse12.jpg",
-            "label": "BALISONGS",
+            "label": "Balisongs",
             "description": "Designed for flow.",
-            "link": "",
+            "collection": "",
             "alt": "",
             "accent": "warm",
             "image_fit": "cover"
@@ -114,9 +114,9 @@
           "settings": {
             "image": "shopify://shop_images/img_0008.jpg",
             "mobile_image": "shopify://shop_images/DSC00371.jpg",
-            "label": "FOLDERS",
+            "label": "Folders",
             "description": "Built to carry.",
-            "link": "",
+            "collection": "",
             "alt": "",
             "accent": "cool",
             "image_fit": "cover"

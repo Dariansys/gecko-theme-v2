@@ -10,18 +10,24 @@
       <ul class="gecko-categories__grid" role="list">
         {% for block in section.blocks %}
           {% liquid
+            assign selected_collection = block.settings.collection
+            assign card_title = block.settings.label | default: selected_collection.title
             assign image = block.settings.image | default: block.settings.mobile_image
             assign image_alt = block.settings.alt | default: image.alt
             assign focal = image.presentation.focal_point | default: '50% 50%'
             assign mobile_focal = block.settings.mobile_image.presentation.focal_point | default: focal
-            assign link = block.settings.link | default: routes.all_products_collection_url
-            assign link_label = block.settings.label | default: image_alt
+            assign link = selected_collection.url
+            assign link_label = card_title | default: image_alt
             if link_label == blank
               assign link_label = 'category_showcase.open_category' | t
             endif
           %}
           <li {{ block.shopify_attributes }}>
-            <a class="gecko-categories__card" href="{{ link | escape }}" data-accent="{{ block.settings.accent | escape }}" data-image-fit="{{ block.settings.image_fit | escape }}" {% if block.settings.label == blank %}aria-label="{{ link_label | escape }}"{% endif %}>
+            {% if link != blank %}
+              <a class="gecko-categories__card" href="{{ link | escape }}" data-accent="{{ block.settings.accent | escape }}" data-image-fit="{{ block.settings.image_fit | escape }}" {% if card_title == blank %}aria-label="{{ link_label | escape }}"{% endif %}>
+            {% else %}
+              <div class="gecko-categories__card" data-accent="{{ block.settings.accent | escape }}" data-image-fit="{{ block.settings.image_fit | escape }}">
+            {% endif %}
               <div class="gecko-categories__media">
                 {% if image != blank %}
                   <picture class="gecko-categories__picture" style="--category-focal: {{ focal | escape }}; --category-mobile-focal: {{ mobile_focal | escape }};">
@@ -43,12 +49,13 @@
               </div>
               <div class="gecko-categories__copy">
                 <div>
-                  {% if block.settings.label != blank %}<h3 class="gecko-categories__label">{{ block.settings.label | escape }}</h3>{% endif %}
+                  {% if card_title != blank %}<h3 class="gecko-categories__label">{{ card_title | escape }}</h3>{% endif %}
                   {% if block.settings.description != blank %}<p class="gecko-categories__description">{{ block.settings.description | escape | newline_to_br }}</p>{% endif %}
+                  {% if link == blank and request.design_mode %}<p class="gecko-categories__description">{{ 'category_showcase.collection_hint' | t }}</p>{% endif %}
                 </div>
                 <span class="gecko-categories__arrow" aria-hidden="true">→</span>
               </div>
-            </a>
+            {% if link != blank %}</a>{% else %}</div>{% endif %}
           </li>
         {% endfor %}
       </ul>
@@ -70,9 +77,9 @@
     "type": "category", "name": "t:category_showcase.category", "settings": [
       { "type": "image_picker", "id": "image", "label": "t:category_showcase.image", "info": "t:category_showcase.image_info" },
       { "type": "image_picker", "id": "mobile_image", "label": "t:category_showcase.mobile_image", "info": "t:category_showcase.mobile_info" },
-      { "type": "text", "id": "label", "label": "t:category_showcase.label" },
+      { "type": "collection", "id": "collection", "label": "t:category_showcase.collection", "info": "t:category_showcase.collection_info" },
+      { "type": "text", "id": "label", "label": "t:category_showcase.label", "info": "t:category_showcase.label_info" },
       { "type": "textarea", "id": "description", "label": "t:category_showcase.description" },
-      { "type": "url", "id": "link", "label": "t:category_showcase.link", "info": "t:category_showcase.link_info" },
       { "type": "text", "id": "alt", "label": "t:category_showcase.alt", "info": "t:category_showcase.alt_info" },
       { "type": "select", "id": "accent", "label": "t:category_showcase.accent", "options": [
         { "value": "warm", "label": "t:category_showcase.warm" },
@@ -86,8 +93,8 @@
     ]
   }],
   "presets": [{ "name": "t:category_showcase.name", "blocks": [
-    { "type": "category", "settings": { "label": "BALISONGS", "description": "Designed for flow.", "accent": "warm" } },
-    { "type": "category", "settings": { "label": "FOLDERS", "description": "Built to carry.", "accent": "cool" } }
+    { "type": "category", "settings": { "label": "Balisongs", "description": "Designed for flow.", "accent": "warm" } },
+    { "type": "category", "settings": { "label": "Folders", "description": "Built to carry.", "accent": "cool" } }
   ] }]
 }
 {% endschema %}

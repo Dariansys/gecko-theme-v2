@@ -110,7 +110,8 @@
   },
   "category_showcase": {
     "open_category": "Explore category",
-    "image_hint": "Choose category photography in this block."
+    "image_hint": "Choose category photography in this block.",
+    "collection_hint": "Select a collection in this category block to enable its link."
   },
   "featured_products": {
     "collection_hint": "Select a collection with storefront products to show your curated selection.",
