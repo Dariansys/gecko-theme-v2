@@ -12,8 +12,12 @@
     "main": {
       "type": "main-product",
       "settings": {
-        "show_vendor": false,
-        "show_dynamic_checkout": false
+        "show_vendor": true,
+        "show_dynamic_checkout": true,
+        "shipping_note": "",
+        "show_specifications": true,
+        "specifications_heading": "Product specifications",
+        "specifications_open_by_default": true
       }
     }
   },
