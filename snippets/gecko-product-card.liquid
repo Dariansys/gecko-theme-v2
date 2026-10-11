@@ -1,6 +1,17 @@
 {% comment %}Native product data only; no cart action or product-page changes.{% endcomment %}
 {% liquid
   assign image = product.featured_image
+  if image == blank
+    assign image = product.images.first
+  endif
+  if image == blank
+    for media in product.media
+      if media.media_type == 'model' and media.preview_image != blank
+        assign image = media.preview_image
+        break
+      endif
+    endfor
+  endif
   assign image_alt = image.alt | default: product.title
   assign accent = accent_index | modulo: 4
   assign on_sale = false
