@@ -1,4 +1,4 @@
-<li class="gecko-cart-drawer__item" data-cart-item data-item-key="{{ item.key | escape }}" data-item-title="{{ item.product.title | escape }}">
+<li class="gecko-cart-drawer__item" data-cart-item data-item-variant="{{ item.variant.id }}" data-item-key="{{ item.key | escape }}" data-item-title="{{ item.product.title | escape }}">
   <a class="gecko-cart-drawer__media gecko-product-media" href="{{ item.url }}" aria-label="{{ item.product.title | escape }}">
     {% render 'gecko-cart-item-image', item: item, sizes: '88px', placeholder_class: 'gecko-cart-drawer__placeholder' %}
   </a>
@@ -23,11 +23,18 @@
       assign quantity_increment = item.variant.quantity_rule.increment | default: 1
       assign next_quantity = item.quantity | plus: quantity_increment
     %}
+    {% capture quantity_max %}{% render 'gecko-quantity-limit', variant: item.variant %}{% endcapture %}
+    {% capture stock_limit %}{% render 'gecko-quantity-limit', variant: item.variant, strict_only: true %}{% endcapture %}
+    {% liquid
+      assign quantity_max = quantity_max | strip
+      assign stock_limit = stock_limit | strip
+      assign numeric_max = quantity_max | plus: 0
+    %}
     <div class="gecko-cart-drawer__quantity">
       <button type="button" data-cart-step="-1" data-focus="decrease" aria-label="{{ 'cart.decrease_for' | t: title: item.product.title | escape }}"{% if item.quantity <= quantity_min %} disabled{% endif %}>−</button>
       <label class="gecko-visually-hidden" for="DrawerQuantity-{{ section_id }}-{{ index }}">{{ 'cart.quantity_for' | t: title: item.product.title | escape }}</label>
-      <input id="DrawerQuantity-{{ section_id }}-{{ index }}" type="number" value="{{ item.quantity }}" min="{{ quantity_min }}" step="{{ item.variant.quantity_rule.increment | default: 1 }}" {% if item.variant.quantity_rule.max %}max="{{ item.variant.quantity_rule.max }}"{% endif %} inputmode="numeric" required data-cart-quantity data-focus="quantity">
-      <button type="button" data-cart-step="1" data-focus="increase" aria-label="{{ 'cart.increase_for' | t: title: item.product.title | escape }}"{% if item.variant.quantity_rule.max and next_quantity > item.variant.quantity_rule.max %} disabled{% endif %}>+</button>
+      <input id="DrawerQuantity-{{ section_id }}-{{ index }}" type="number" value="{{ item.quantity }}" min="{{ quantity_min }}" step="{{ item.variant.quantity_rule.increment | default: 1 }}" {% if quantity_max != blank %}max="{{ quantity_max }}"{% endif %}{% if stock_limit != blank %} data-stock-limit="{{ stock_limit }}"{% endif %} inputmode="numeric" required data-cart-quantity data-focus="quantity">
+      <button type="button" data-cart-step="1" data-focus="increase" aria-label="{{ 'cart.increase_for' | t: title: item.product.title | escape }}"{% if quantity_max != blank and next_quantity > numeric_max %} disabled{% endif %}>+</button>
     </div>
     <a class="gecko-cart-drawer__remove" href="{{ item.url_to_remove }}" data-cart-remove data-focus="remove" aria-label="{{ 'cart.remove_for' | t: title: item.product.title | escape }}">{{ 'cart.remove' | t }}</a>
   </div>

@@ -14,7 +14,14 @@ if (!customElements.get('gecko-product')) {
       this.addEventListener('change', (event) => {
         if (event.target.matches('[data-option-value]')) this.updateVariant(event.target);
       }, { signal });
+      this.addEventListener('invalid', event => {
+        if (event.target.matches('[name="quantity"]') && event.target.validity.rangeOverflow) {
+          event.preventDefault();
+          this.validateQuantity(event.target);
+        }
+      }, { signal, capture: true });
       this.addEventListener('submit', (event) => {
+        if (!this.validateQuantity(this.querySelector('[name="quantity"]'))) { event.preventDefault(); return; }
         const details = this.querySelector('[data-product-details]');
         if (details.getAttribute('aria-busy') === 'true' || details.dataset.available !== 'true' || !details.dataset.selectedVariant) event.preventDefault();
       }, { signal });
@@ -141,6 +148,19 @@ if (!customElements.get('gecko-product')) {
       if (count) count.textContent = this.slides[index].getAttribute('aria-label');
     }
 
+    validateQuantity(input) {
+      if (input.max === '' || input.valueAsNumber <= Number(input.max)) return true;
+      const max = Number(input.max), min = Number(input.min) || 1, step = Number(input.step) || 1;
+      if (Number.isFinite(input.valueAsNumber) && input.valueAsNumber > max) {
+        // Respect minimum/increment rules; never invent a valid purchase when stock is below min.
+        input.value = max >= min ? min + Math.floor((max - min) / step) * step : min;
+        this.setStatus(this.dataset.quantityLimit.replace('[max]', String(max)), true);
+        input.focus({ preventScroll: true });
+        return false;
+      }
+      return true;
+    }
+
     setStatus(message, error = false, link) {
       const status = this.querySelector('[data-product-status]');
       status.className = error ? 'gecko-product__update-error' : 'gecko-visually-hidden';
@@ -188,7 +208,7 @@ if (!customElements.get('gecko-product')) {
         const quantityInput = updated.querySelector('[name="quantity"]');
         const min = Number(quantityInput.min) || 1;
         const step = Number(quantityInput.step) || 1;
-        const max = Number(quantityInput.max) || Infinity;
+        const max = quantityInput.max === '' ? Infinity : Number(quantityInput.max);
         const boundedQuantity = Math.max(min, Math.min(Number(quantity) || min, max));
         quantityInput.value = min + Math.floor((boundedQuantity - min) / step) * step;
         [...updated.querySelectorAll('[data-option-value]')].find(value => value.value === focusValue)?.focus({ preventScroll: true });

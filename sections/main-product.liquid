@@ -5,7 +5,9 @@
   assign form_id = 'GeckoProductForm-' | append: section.id
   assign quantity_id = 'GeckoQuantity-' | append: section.id
 %}
-<gecko-product class="gecko-product full-width" data-section-id="{{ section.id }}" data-product-url="{{ product.url }}" data-update-error="{{ 'gecko_product.update_error' | t | escape }}" data-updating="{{ 'gecko_product.updating' | t | escape }}">
+{% capture quantity_max %}{% render 'gecko-quantity-limit', variant: current_variant %}{% endcapture %}
+{% assign quantity_max = quantity_max | strip %}
+<gecko-product class="gecko-product full-width" data-section-id="{{ section.id }}" data-product-url="{{ product.url }}" data-update-error="{{ 'gecko_product.update_error' | t | escape }}" data-quantity-limit="{{ 'gecko_product.quantity_limit' | t: max: '[max]' | escape }}" data-updating="{{ 'gecko_product.updating' | t | escape }}">
   <div class="gecko-product__layout gecko-container gecko-container--wide">
     {% render 'product-media-gallery', product: product, current_variant: current_variant, section_id: section.id %}
     <div class="gecko-product__details" data-product-details data-selected-media="{{ current_variant.featured_media.id }}" data-selected-variant="{{ current_variant.id }}" data-available="{{ current_variant.available | default: false }}">
@@ -25,7 +27,7 @@
           <p class="gecko-visually-hidden" data-product-status role="status" aria-live="polite" aria-atomic="true" tabindex="-1"></p>
           <div class="gecko-product__quantity">
             <label for="{{ quantity_id }}">{{ 'gecko_product.quantity' | t }}</label>
-            <input id="{{ quantity_id }}" type="number" name="quantity" value="{{ current_variant.quantity_rule.min | default: 1 }}" min="{{ current_variant.quantity_rule.min | default: 1 }}" step="{{ current_variant.quantity_rule.increment | default: 1 }}"{% if current_variant.quantity_rule.max %} max="{{ current_variant.quantity_rule.max }}"{% endif %} inputmode="numeric" required>
+            <input id="{{ quantity_id }}" type="number" name="quantity" value="{{ current_variant.quantity_rule.min | default: 1 }}" min="{{ current_variant.quantity_rule.min | default: 1 }}" step="{{ current_variant.quantity_rule.increment | default: 1 }}"{% if quantity_max != blank %} max="{{ quantity_max }}"{% endif %} inputmode="numeric" required>
           </div>
           <button class="gecko-product__add" type="submit" name="add" data-primary-add{% unless current_variant.available %} disabled{% endunless %}>{% if current_variant.available %}{{ 'gecko_product.add' | t }}{% elsif current_variant %}{{ 'gecko_product.sold_out' | t }}{% else %}{{ 'gecko_product.unavailable' | t }}{% endif %}<span aria-hidden="true">→</span></button>
         </div>

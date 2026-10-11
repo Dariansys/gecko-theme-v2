@@ -1,0 +1,20 @@
+{%- comment -%}Effective per-line maximum. strict_only returns the eligible stock cap for per-variant cart reconciliation.{%- endcomment -%}
+{%- liquid
+  assign maximum = variant.quantity_rule.max
+  assign strict_inventory = false
+  if variant.inventory_management == 'shopify' and variant.inventory_policy == 'deny' and variant.inventory_quantity != nil
+    if variant.inventory_quantity >= 0
+      assign strict_inventory = true
+      if maximum == blank or variant.inventory_quantity < maximum
+        assign maximum = variant.inventory_quantity
+      endif
+    endif
+  endif
+  if strict_only
+    if strict_inventory
+      echo variant.inventory_quantity
+    endif
+  elsif maximum != blank
+    echo maximum
+  endif
+-%}

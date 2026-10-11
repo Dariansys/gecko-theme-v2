@@ -36,7 +36,7 @@ if (!customElements.get('gecko-cart-drawer')) {
         }
         if (!form.matches('gecko-product form.gecko-product__form') || event.defaultPrevented || (event.submitter && !event.submitter.matches('[data-primary-add]'))) return;
         const details = form.closest('[data-product-details]');
-        if (details?.dataset.available !== 'true' || details.getAttribute('aria-busy') === 'true' || !form.checkValidity()) return;
+        if (details?.dataset.available !== 'true' || details.getAttribute('aria-busy') === 'true' || !form.closest('gecko-product').validateQuantity(form.querySelector('[name=quantity]')) || !form.checkValidity()) return;
         event.preventDefault();
         if (this.busy) return;
         const opener = event.submitter || form.querySelector('[data-primary-add]');
@@ -100,6 +100,7 @@ if (!customElements.get('gecko-cart-drawer')) {
         if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
         else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
       }, options);
+      if (this.inventoryCorrections().length) this.run(() => this.dataset.adjusted);
     }
 
     apiURL(route) {
@@ -198,14 +199,23 @@ if (!customElements.get('gecko-cart-drawer')) {
       const active = document.activeElement;
       const item = active.closest('[data-cart-item]');
       const focus = item ? { key: item.dataset.itemKey, control: active.dataset.focus, index: [...this.querySelectorAll('[data-cart-item]')].indexOf(item) } : null;
+      this.inventoryAttempts ||= new Set();
+      this.inventoryBudget = null;
       this.error.textContent = '';
+      this.status.className = 'gecko-visually-hidden';
       this.status.textContent = this.dataset.loading;
       const product = productStatus?.closest('gecko-product');
       if (product) product.setStatus(this.dataset.loading);
       this.submittingForm = productStatus?.closest('form');
       this.setBusy(true, Boolean(productStatus));
       try {
-        const message = await task();
+        let message = await task();
+        if (await this.reconcileInventory()) this.pendingInventoryAdjustment = true;
+        if (this.pendingInventoryAdjustment && this.dialog.open) {
+          message = this.dataset.adjusted;
+          this.status.className = 'gecko-cart-drawer__error';
+          this.pendingInventoryAdjustment = false;
+        }
         if (this.isConnected) {
           const previous = this.productError;
           if (previous?.product.querySelector('[data-product-status]')?.textContent.startsWith(previous.message)) previous.product.setStatus('');
@@ -218,7 +228,7 @@ if (!customElements.get('gecko-cart-drawer')) {
         // Only read state here; never replay an uncertain mutation.
         this.stale = true;
         let reconciled = false;
-        try { await this.refresh(true); reconciled = true; } catch { /* Keep native cart recovery available. */ }
+        try { await this.refresh(true); await this.reconcileInventory(); reconciled = true; } catch { this.stale = true; /* Keep native cart recovery available. */ }
         const message = reconciled
           ? error.customerMessage || this.dataset.reconciledError
           : this.dataset.error;
@@ -259,7 +269,7 @@ if (!customElements.get('gecko-cart-drawer')) {
     async change(item, quantity) {
       const input = item.querySelector('[data-cart-quantity]');
       if (quantity !== 0 && (!Number.isFinite(quantity) || !input.checkValidity())) {
-        this.error.textContent = this.dataset.invalid;
+        this.error.textContent = input.max !== '' && quantity > Number(input.max) ? this.dataset.quantityLimit.replace('[max]', input.max) : this.dataset.invalid;
         input.value = input.defaultValue;
         input.focus();
         return;
@@ -282,6 +292,52 @@ if (!customElements.get('gecko-cart-drawer')) {
       // On rejection, restore the displayed server-confirmed quantity.
       const remaining = this.querySelector(`[data-item-key="${CSS.escape(key)}"] [data-cart-quantity]`);
       if (remaining && this.stale) remaining.value = remaining.defaultValue;
+    }
+
+    inventoryCorrections() {
+      const remaining = new Map();
+      const rows = [...this.querySelectorAll('[data-cart-item]')];
+      for (const row of rows) {
+        const input = row.querySelector('[data-stock-limit]');
+        if (!input) continue;
+        const stock = Number(input.dataset.stockLimit), variant = row.dataset.itemVariant;
+        if (!Number.isFinite(stock) || stock < 0 || !variant) continue;
+        remaining.set(variant, Math.min(remaining.get(variant) ?? Infinity, stock));
+      }
+      const corrections = [];
+      for (const row of rows) {
+        const input = row.querySelector('[data-stock-limit]'), variant = row.dataset.itemVariant;
+        if (!input || !remaining.has(variant)) continue;
+        const current = Number(input.defaultValue), min = Number(input.min) || 1, step = Number(input.step) || 1;
+        const ceiling = Math.min(Number(input.max), remaining.get(variant));
+        const allowed = ceiling >= min ? min + Math.floor((ceiling - min) / step) * step : 0;
+        const quantity = Math.min(current, allowed);
+        remaining.set(variant, remaining.get(variant) - quantity);
+        if (current > quantity) corrections.push({ key: row.dataset.itemKey, current, quantity });
+      }
+      return corrections;
+    }
+
+    async reconcileInventory() {
+      // One bounded pass per operation, using current server markup after every change.
+      // Group property-separated lines by variant, never by product or total Bag count.
+      if (this.inventoryBudget === null) this.inventoryBudget = this.querySelectorAll('[data-cart-item]').length;
+      let adjusted = false;
+      for (;;) {
+        const correction = this.inventoryCorrections()[0];
+        if (!correction) { this.inventoryAttempts.clear(); return adjusted; }
+        const signature = `${correction.key}:${correction.current}:${correction.quantity}`;
+        if (this.inventoryBudget <= 0 || this.inventoryAttempts.has(signature)) throw new Error('Inventory reconciliation incomplete');
+        this.inventoryBudget--;
+        this.inventoryAttempts.add(signature);
+        this.fullCartStale = Boolean(document.querySelector('[data-cart-page-section]'));
+        const response = await fetch(this.apiURL(this.dataset.changeUrl), {
+          method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ id: correction.key, quantity: correction.quantity, sections: this.sectionIds(), sections_url: this.dataset.cartUrl }),
+        });
+        await this.readMutation(response);
+        adjusted = true;
+      }
     }
 
     async readMutation(response) {
